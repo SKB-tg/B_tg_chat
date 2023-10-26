@@ -67,7 +67,7 @@ async def save_newuser(user):
     new_user['first_name']=user.first_name
     new_user['is_bot']=user.is_bot
     new_user['is_donate']=False
-    
+
 #***********************BOT-CHATBOT
 
 # @form_router.message(Command(commands=["start"]))
@@ -132,7 +132,7 @@ async def command_promo(message: Message, state: FSMContext) -> None:
     is_donate = True
     update_coloms_user(id_db, [{"is_donate": True},])
     await message.answer(
-        "Добро пожаловать, у вас полный доступ к возможностям HelperGPT!\nЧем я могу Вам помочь?",
+        "Добро пожаловать, у вас полный доступ к действующему функционалу\nЗадавайте вопросы, делитесь мнениями...",
 
         reply_markup=ReplyKeyboardRemove(),
     )
@@ -157,7 +157,7 @@ async def process_write_menu2_bots(message: types.Message) -> None:
     if tg_user_is_db(user_name) != False:
         save_newuser(message.from_user)
     _is_donat=TgUser.is_donate
-    if (message.text == '/promo' or _is_donat == False) :
+    if (message.text == '/promo' & _is_donat == True) :
         print(_is_donat)
         await message.answer(
             "Неправильно набрана команда, повторите!",
