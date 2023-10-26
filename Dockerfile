@@ -7,7 +7,7 @@ RUN python -m venv ./venvap
 ENV PATH="/venvap/bin:$PATH"
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY *.py ./
 COPY app ./app
