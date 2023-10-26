@@ -1,17 +1,15 @@
 FROM python:3.9
 
-WORKDIR .
+WORKDIR /app
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
 
-RUN python -m venv ./venvap
+# First copy only requirements.txt to cache dependencies independently
+COPY requirements.txt /app
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV PATH="/venvap/bin:$PATH"
+COPY . /app
 
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-
-COPY *.py ./
-COPY app ./app
-#COPY createdb.sql ./
 
 ENTRYPOINT ["python", "server.py"]
 
