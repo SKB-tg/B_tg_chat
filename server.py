@@ -182,10 +182,20 @@ async def consumer():
     print('Consumed start', 555+1)
     #Запрос в ДБ и отсылка тг
     #Запрос  на разбудить
-    requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text=start')
+    #requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text=start')
     time.sleep(1)
-    requests.get('https://b-tg-poster.onrender.com')
-
+    try:
+        async with timeout(30) as cm:
+            await requests.get('https://desing-profi.onrender.com')
+        print(cm.expired)
+        if cm.expired == True:
+            print(cm.expired)
+            return
+    except asyncio.TimeoutError as e:
+        print(e)
+        return
+    finally:
+        return
 
 
 async def main():
