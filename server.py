@@ -58,7 +58,16 @@ class Form(StatesGroup):
     like_bots = State()
     language = State()
 
-
+#/**********************
+async def save_newuser(user):
+    new_user={}
+    new_user['codename']=user.username
+    new_user['id_chat']=user.id
+    new_user['last_name']=user.last_name
+    new_user['first_name']=user.first_name
+    new_user['is_bot']=user.is_bot
+    new_user['is_donate']=False
+    
 #***********************BOT-CHATBOT
 
 # @form_router.message(Command(commands=["start"]))
@@ -145,8 +154,8 @@ async def process_write_menu2_bots(message: types.Message) -> None:
     # await state.set_state(Form.menu)
     user_name = message.from_user.username
     #print(121, message.from_user.username, get_tguser(user_name).is_donate, TgUser.id)
-    if tg_user_is_db(user_name).codename:
-        return
+    if tg_user_is_db(user_name) != False:
+        save_newuser(message.from_user)
     _is_donat=TgUser.is_donate
     if (message.text == '/promo' or _is_donat == False) :
         print(_is_donat)
@@ -172,6 +181,9 @@ async def process_write_menu2_bots(message: types.Message) -> None:
         await message.answer(
             answer,
                 reply_markup=ReplyKeyboardRemove())
+
+
+
 #**************************END
 #import async_timeout
 from async_timeout import timeout
