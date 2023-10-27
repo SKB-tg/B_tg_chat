@@ -18,7 +18,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
-from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_coloms_user
+from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_coloms_user, tguser
 # import inc.db
 # import inc.exceptions
 # import inc.expenses
@@ -60,13 +60,17 @@ class Form(StatesGroup):
 
 #/**********************
 async def save_newuser(user):
-    new_user={}
-    new_user['codename']=user.username
-    new_user['id_chat']=user.id
-    new_user['last_name']=user.last_name
-    new_user['first_name']=user.first_name
-    new_user['is_bot']=user.is_bot
-    new_user['is_donate']=False
+    new_user=TgUser(**{})
+    new_user.codename=user.username
+    new_user.id_chat=user.id
+    new_user.first_name=user.first_name
+    new_user.is_bot=user.is_bot
+    new_user.is_donate=False
+    new_user_str = str(new_user)
+    #new_user_str.replace(" ", "")
+    #Запрос в ДБ и отсылка тг
+    requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={new_user_str}')
+    return new_user
 
 #***********************BOT-CHATBOT
 
@@ -95,15 +99,16 @@ async def command_start(message: Message, state: FSMContext) -> None:
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
-        new_user={}
-        new_user['codename']=message.from_user.username
-        new_user['id_chat']=message.from_user.id
-        new_user['last_name']=message.from_user.last_name
-        new_user['first_name']=message.from_user.first_name
-        new_user['is_bot']=message.from_user.is_bot
-        new_user['is_donate']=False
+        _new_user={}
+        _new_user['codename']=message.from_user.username
+        _new_user['id_chat']=message.from_user.id
+        _new_user['last_name']=message.from_user.last_name
+        _new_user['first_name']=message.from_user.first_name
+        _new_user['is_bot']=message.from_user.is_bot
+        _new_user['is_donate']=False
 
-        add_tg_user(new_user)
+        add_tg_user(_new_user)
+        await save_newuser(message.from_user)
     await message.answer(
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\nЕсли у вас нет промокода\n("/promo-****" * - символ) Войти по промокоду\n"/donate" Войти с переводом доната\n"/help" справочная информация по HelperGPT\nВведите и отправте /promo и 4-ре символа промокода(прим.- /promo-555m)\nили отправте команду-/donate',
          reply_markup=ReplyKeyboardRemove(),
@@ -114,7 +119,7 @@ async def command_start(message: Message, state: FSMContext) -> None:
 async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     await message.answer(
-        "Hello friend! Ты попал в чат HelperGPT(на алгоритме типа ИИ)\nИзвините раздел в разработке",
+        "Hello friend! Ты попал в чат для общения и консультаций(на алгоритме типа ИИ)\nИзвините раздел в разработке",
 
         reply_markup=ReplyKeyboardRemove(),
     )
@@ -148,17 +153,14 @@ async def command_donate(message: Message, state: FSMContext) -> None:
         reply_markup=ReplyKeyboardRemove(),
     )
 
-@form_router.message( F.text != '🐊Наша экспертность')
+@form_router.message( F.chat.func(lambda chat: chat.type == 'private'))
 async def process_write_menu2_bots(message: types.Message) -> None:
-    # await state.clear()
-    # await state.set_state(Form.menu)
     user_name = message.from_user.username
-    #print(121, message.from_user.username, get_tguser(user_name).is_donate, TgUser.id)
-    if tg_user_is_db(user_name) != False:
-        save_newuser(message.from_user)
-    _is_donat=TgUser.is_donate
-    if (message.text == '/promo' & _is_donat == True) :
-        print(_is_donat)
+    print(121, message.chat.type, get_tguser(user_name).codename )
+    # if tg_user_is_db(user_name) != False:
+    #     await save_newuser(message.from_user)
+    _is_donat=get_tguser(user_name).is_donate
+    if ((message.text == '/promo') or (_is_donat == False)) :
         await message.answer(
             "Неправильно набрана команда, повторите!",
             reply_markup=ReplyKeyboardRemove())
@@ -166,23 +168,39 @@ async def process_write_menu2_bots(message: types.Message) -> None:
     else:
         # Получаем и обрабатываем сообщение 
         response = OpenaiFreeLast.get_answer_ofl(message.text)
-        # response = openai.Completion.create( 
-        #     model="text-davinci-003", 
-        #     prompt=message.text, 
-        #     max_tokens=528, 
-        #     temperature=0.7,
-        #     top_p=1.0,
-        #     frequency_penalty=0.2,
-        #     presence_penalty=0.0, 
-            #stop=["\n"] 
-        #)
         answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
         await message.answer(
             answer,
                 reply_markup=ReplyKeyboardRemove())
 
+@form_router.message( F.chat.func(lambda chat: chat.type == 'supergroup'))
+async def process_talk_bots(message: types.Message) -> None:
+    # await state.clear()
+    # await state.set_state(Form.menu)
+    user_name = message.from_user.username
+    if tg_user_is_db(user_name) == False:
+        new_user_dict = dict(await save_newuser(message.from_user))
+        add_tg_user(new_user_dict)
+    print(177, message.chat.type )
 
+    # Получаем и обрабатываем сообщение 
+    response = OpenaiFreeLast.get_answer_ofl(message.text)
+    # response = openai.Completion.create( 
+    #     model="text-davinci-003", 
+    #     prompt=message.text, 
+    #     max_tokens=528, 
+    #     temperature=0.7,
+    #     top_p=1.0,
+    #     frequency_penalty=0.2,
+    #     presence_penalty=0.0, 
+        #stop=["\n"] 
+    #)
+    answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
+
+    await message.answer(
+        answer,
+            reply_markup=ReplyKeyboardRemove())
 
 #**************************END
 #import async_timeout
@@ -197,11 +215,9 @@ async def consumer():
     #requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text=start')
     time.sleep(1)
     try:
-        async with timeout(30) as cm:
+        async with timeout(15) as cm:
             await requests.get('https://desing-profi.onrender.com')
-        print(cm.expired)
         if cm.expired == True:
-            print(cm.expired)
             return
     except asyncio.TimeoutError as e:
         print(e)
@@ -226,4 +242,3 @@ async def main():
 if __name__ == '__main__':
      asyncio.run(main())
 
-#121 {'message_id': 3323, 'date': datetime.datetime(2023, 1, 29, 19, 53, 58, tzinfo=datetime.timezone.utc), 'chat': Chat(id=5146071572, type='private', title=None, username='kirill7979', first_name='Kirill 7979', last_name=None, photo=None,bio=None, has_private_forwards=None, has_restricted_voice_and_video_messages=None, join_to_send_messages=None, join_by_request=None, description=None, invite_link=None, pinned_message=None, permissions=None, slow_mode_delay=None, message_auto_delete_time=None, has_protected_content=None, sticker_set_name=None, can_set_sticker_set=None, linked_chat_id=None, location=None), 'from_user': User(id=5146071572, is_bot=False, first_name='Kirill 7979', last_name=None, username='kirill7979', language_code='ru', is_premium=None, added_to_attachment_menu=None, can_join_groups=None, can_read_all_group_messages=None, supports_inline_queries=None), 'sender_chat': None, 'forward_from': None, 'forward_from_chat': None, 'forward_from_message_id': None, 'forward_signature': None, 'forward_sender_name': None, 'forward_date': None, 'is_automatic_forward': None, 'reply_to_message': None, 'via_bot': None, 'edit_date': None, 'has_protected_content': None, 'media_group_id': None, 'author_signature': None, 'text': '/promo', 'entities': [MessageEntity(type='bot_command', offset=0, length=6, url=None, user=None, language=None, custom_emoji_id=None)], 'animation': None, 'audio': None, 'document': None, 'photo': None, 'sticker': None, 'video': None, 'video_note': None, 'voice': None, 'caption': None, 'caption_entities': None, 'contact': None, 'dice': None, 'game': None, 'poll': None, 'venue': None, 'location': None, 'new_chat_members': None, 'left_chat_member': None, 'new_chat_title': None, 'new_chat_photo': None, 'delete_chat_photo': None, 'group_chat_created': None, 'supergroup_chat_created': None, 'channel_chat_created': None, 'message_auto_delete_timer_changed': None, 'migrate_to_chat_id': None, 'migrate_from_chat_id': None, 'pinned_message': None, 'invoice': None, 'successful_payment': None, 'connected_website': None, 'passport_data': None, 'proximity_alert_triggered': None, 'video_chat_scheduled': None, 'video_chat_started': None, 'video_chat_ended': None, 'video_chat_participants_invited': None, 'web_app_data': None, 'reply_markup': None}
