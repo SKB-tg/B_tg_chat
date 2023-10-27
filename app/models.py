@@ -2,19 +2,23 @@ import datetime
 import pytz
 from pydantic import BaseModel
 
-from typing import Dict, List, NamedTuple, ByteString, Union
+from typing import Dict, List, NamedTuple, ByteString, Union, Any
 import app.db as db
 
 
 
 class TgUser(BaseModel):
 	"""docstring for TgUser"""
-	id: int
-	codename: str
-	id_chat: int
-	first_name: str
-	is_donate: bool
+	id: int = 1
+	codename: str = ""
+	id_chat: int = 0
+	first_name: str = ''
+	last_name: str = ''
+	is_bot: bool = False
+	is_donate: bool = False
 
+tguser = TgUser(**{'id': 0, "codename": "", "id_chat": 0, "created": "", "last_name": "", "first_name": "",
+  "is_donate": False, "is_bot": False})
 
 def add_tg_user(new_user: dict) -> TgUser:
 	inserted_row_id=db.insert("tguser", {
@@ -29,12 +33,11 @@ def add_tg_user(new_user: dict) -> TgUser:
 	d_tg_user=TgUser(id= 0, codename= "", is_donate= False, id_chat= 1, first_name= "").dict().update(new_user)
 	#d_tg_user1=d_tg_user.dict(None, None,  None, False, None, include=['id', 'codename', 'id_chat', 'is_donate', 'first_name'])#.update(new_user)
 	#tg_user_data = {i[0]: i[1] for i in new_user.items() if (i[0] != 'id') and (i[0] != 'username')}
-	print(31, TgUser['codename'], d_tg_user)
 
 	return #d_tg_user #(codename=new_user['username'], is_donate='1003', id_chat=None, first_name="first_name")
 
 
-def tg_user_is_db(user_data: str) -> Union[bool, TgUser]:
+def tg_user_is_db(user_data: str) -> Union[bool, Any]:
 	code = user_data#['username']
 	cursor = db.get_cursor()
 	try:
@@ -46,16 +49,16 @@ def tg_user_is_db(user_data: str) -> Union[bool, TgUser]:
 	print (46, result)
 	if result == None:
 		return False
-	TgUser.id = result[0] 
-	TgUser.codename = result[1]
-	TgUser.id_chat = result[2] 
-	TgUser.last_name = result[4] 
-	TgUser.first_name = result[5] 
-	TgUser.is_donate = result[6] 
-	TgUser.is_bot = result[7]
-	return TgUser
+	tguser.id = result[0] 
+	tguser.codename = result[1]
+	tguser.id_chat = result[2] 
+	tguser.last_name = result[4] 
+	tguser.first_name = result[5] 
+	tguser.is_donate = True if result[6] == 1 else False
+	tguser.is_bot = True if result[7] == 1 else False
+	return tguser
 
-def update_coloms_user( id_db: int, coloms: list) -> TgUser:
+def update_coloms_user( id_db: int, coloms: list) -> Union[bool, Any]:
 	for i in coloms:
 		col={}
 		col.update(i)
@@ -74,8 +77,8 @@ def update_coloms_user( id_db: int, coloms: list) -> TgUser:
 	TgUser.id_chat = result[2] 
 	TgUser.last_name = result[4] 
 	TgUser.first_name = result[5] 
-	TgUser.is_donate = result[6] 
-	TgUser.is_bot = result[7]
+	TgUser.is_donate = True if result[6] == 1 else False
+	TgUser.is_bot =  True if result[7] == 1 else False
 	return TgUser
 
 def load_users() -> List[TgUser]:
@@ -89,10 +92,10 @@ def get_user() -> List[Dict]:
   """Возвращает справочник категорий."""
   return _categories
 
-def get_tguser( username: str) -> TgUser:
+def get_tguser( username: str) -> Union[bool, Any]:
 	_users = load_users()
 	for user in _users:
-		if user['first_name'] == username:
+		if user['codename'] == username:
 			codename=user['codename']
 			cursor = db.get_cursor()
 			try:
@@ -104,15 +107,15 @@ def get_tguser( username: str) -> TgUser:
 			print (80, result)
 			if result == None:
 				return False
-			TgUser.id = result[0]
-			TgUser.codename = result[1]
-			TgUser.id_chat = result[2] 
-			#TgUser.last_name = result[4] 
-			TgUser.first_name = result[5] 
-			TgUser.is_donate = result[6] 
-			#TgUser.is_bot = result[7]
-			print(112, TgUser.is_donate)
-	return TgUser
+			tguser.id = result[0]
+			tguser.codename = result[1]
+			tguser.id_chat = result[2] 
+			#tguser.last_name = result[4] 
+			tguser.first_name = result[5] 
+			tguser.is_donate = True if result[6] == 1 else False
+			#tguser.is_bot = result[7]
+			print(112, tguser.is_donate)
+	return tguser
 
 def _get_now_formatted() -> str:
     """Возвращает сегодняшнюю дату строкой"""

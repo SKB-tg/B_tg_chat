@@ -44,6 +44,7 @@ class OpenaiFreeLast():
 
             #answer = await _handler(model[0], stream, txt, prov[1])
             return response
+        print("----------ChatgptAi---------------")
         messages=[{"role": "system", "content": "Вы, Платон, мудрый чат-бот, но в то же время сварливый и немногословный на единственный последующий ответ."}, {"role": "user", "content": promt}]
         response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
         provider=g4f.Provider.ChatgptAi,
