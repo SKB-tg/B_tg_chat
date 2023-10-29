@@ -58,28 +58,19 @@ def tg_user_is_db(user_data: str) -> Union[bool, Any]:
 	tguser.is_bot = True if result[7] == 1 else False
 	return tguser
 
-def update_coloms_user( id_db: int, coloms: list) -> Union[bool, Any]:
+def update_coloms_user( id_db: int, coloms: list) -> bool:
 	for i in coloms:
 		col={}
 		col.update(i)
 	cursor = db.get_cursor()
-	print(col)
+	print(66, col)
 	try:
 		db.updates('tguser', id_db, col)
 	except Exception as e:
 		print(78, e)
 		return False
-	result = cursor.fetchone()
 	
-	if result == None:
-		return False
-	tguser.codename = result[1]
-	tguser.id_chat = result[2] 
-	tguser.last_name = result[4] 
-	tguser.first_name = result[5] 
-	tguser.is_donate = True if result[6] == 1 else False
-	tguser.is_bot =  True if result[7] == 1 else False
-	return tguser
+	return True
 
 def load_users() -> List[TgUser]:
   """Возвращает справочник категорий расходов из БД"""
@@ -104,7 +95,7 @@ def get_tguser( username: str) -> Union[bool, Any]:
 				print(78, e)
 				return False
 			result = cursor.fetchone()
-			print (80, result)
+			print (107, result)
 			if result == None:
 				return False
 			tguser.id = result[0]
