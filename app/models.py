@@ -62,7 +62,7 @@ def update_coloms_user( id_db: int, coloms: list) -> Union[bool, Any]:
 	for i in coloms:
 		col={}
 		col.update(i)
-tguser	cursor = db.get_cursor()
+	cursor = db.get_cursor()
 	print(col)
 	try:
 		db.updates('tguser', id_db, col)
