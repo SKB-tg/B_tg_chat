@@ -28,8 +28,8 @@ class OpenaiFreeLast():
         global nn
         nn +=  1
         model = 'gpt-3.5-turbo'
-        #text=f"На тему этой фразы дай совет коротко, конкретно, но в шутливом, несерьезном стиле: '{promt}'"
-        text=f"На тему этой фразы дай реплику коротко, конкретно, но в ворчливом, поучительном стиле: '{promt}'"
+        text=f"На тему этой фразы дай совет коротко, конкретно, но в шутливом, несерьезном стиле: '{promt}'"
+        #text=f"На тему этой фразы дай реплику коротко, конкретно, но в ворчливом, поучительном стиле: '{promt}'"
 
         if nn%2 == 0:
             #text=promt
@@ -41,7 +41,10 @@ class OpenaiFreeLast():
             # provider=g4f.Provider.ChatgptAi,
             # messages=messages)
             response = g4f_st.ChatCompletions.create(model=model, messages=[{'role': 'user', 'content': text}])
-
+            if response == "":
+                response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
+                provider=g4f.Provider.You,
+                messages=[{'role': 'user', 'content': text}])
             #answer = await _handler(model[0], stream, txt, prov[1])
             return response
         print("----------ChatgptAi---------------")
