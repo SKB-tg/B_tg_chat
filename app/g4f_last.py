@@ -41,6 +41,7 @@ class OpenaiFreeLast():
             # provider=g4f.Provider.ChatgptAi,
             # messages=messages)
             response = g4f_st.ChatCompletions.create(model=model, messages=[{'role': 'user', 'content': text}])
+            print(44, response)
             if response == "":
                 response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
                 provider=g4f.Provider.You,
