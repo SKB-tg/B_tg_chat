@@ -13,5 +13,5 @@ COPY . /app
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT ["python", "server.py"]
+ENTRYPOINT ["python", "server2.py"]
 
