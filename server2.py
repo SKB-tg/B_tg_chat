@@ -44,13 +44,13 @@ promokod = '1003'
 promo="promo" + '-' + promokod
 
 # Устанавливаем соединение с Telegram API 
-bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
+#bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 base_url="https://b-tg-chat.onrender.com"
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
-form_router = Router()
-dp = Dispatcher()
+#form_router = Router()
+#dp = Dispatcher()
 #form_router.message.middleware(AccessMiddleware(ACCESS_ID))
 #dp.middleware.setup(AccessMiddleware(ACCESS_ID))
 
