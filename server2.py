@@ -243,7 +243,9 @@ async def on_startup(bot: Bot, base_url: str):
 
 
 def main():
-    #requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id='+str(5146071572)+'&text=start.')
+    bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")
+    form_router = Router()
+    dp = Dispatcher()
     dp.include_router(form_router)
 
     app = Application()
@@ -262,7 +264,7 @@ def main():
     # In this example we use SimpleRequestHandler which is designed to handle simple cases
     webhook_requests_handler = SimpleRequestHandler(
         dispatcher=dp, bot=bot,
-    )
+    ).register(app, path="/webhook")
     app.router.add_get("/", demo_handler)
     setup_application(app, dp, bot=bot)
 
@@ -272,6 +274,3 @@ if __name__ == '__main__':
     main()
 
 
-
-
-#https://api.render.com/deploy/srv-ckt4br0168ec73d1v8lg?key=Le5F86PGHfY
