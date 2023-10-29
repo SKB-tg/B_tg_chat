@@ -262,7 +262,7 @@ def main():
     # Create an instance of request handler,
     # aiogram has few implementations for different cases of usage
     # In this example we use SimpleRequestHandler which is designed to handle simple cases
-    webhook_requests_handler = SimpleRequestHandler(
+    SimpleRequestHandler(
         dispatcher=dp, bot=bot,
     ).register(app, path="/webhook")
     app.router.add_get("/", demo_handler)
