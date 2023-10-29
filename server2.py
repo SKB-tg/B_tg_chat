@@ -34,7 +34,7 @@ from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_co
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN_2 = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 #print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
 
@@ -44,7 +44,7 @@ promokod = '1003'
 promo="promo" + '-' + promokod
 
 # Устанавливаем соединение с Telegram API 
-bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
+bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 base_url="https://b-tg-chat.onrender.com"
 
 # Устанавливаем соединение с OpenAI API 
@@ -243,7 +243,6 @@ async def on_startup(bot: Bot, base_url: str):
 
 
 def main():
-    # bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")
     # form_router = Router()
     # dp = Dispatcher()
     dp.include_router(form_router)
