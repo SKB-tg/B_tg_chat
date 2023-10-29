@@ -234,7 +234,7 @@ async def consumer():
 from pathlib import Path
 
 async def demo_handler(request: Request):
-    return FileResponse(Path(__file__).parent.resolve() / "app\\index.html")
+    return FileResponse(Path(__file__).parent.resolve() / "app/index.html")
     print(Path(__file__).parent.resolve())
 
 async def on_startup(bot: Bot, base_url: str):
