@@ -36,7 +36,7 @@ logging.basicConfig(level=logging.INFO)
 
 TELEGRAM_BOT_TOKEN_2 = os.getenv("TELEGRAM_BOT_TOKEN")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
-print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
+#print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
 
 #lobal is_donat
 is_donat = False
@@ -268,7 +268,7 @@ def main():
     app.router.add_get("/", demo_handler)
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=8080)
+    run_app(app, host="0.0.0.0", port=80)
 
 if __name__ == '__main__':
     main()
