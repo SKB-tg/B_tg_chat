@@ -172,8 +172,8 @@ async def process_write_menu2_bots(message: types.Message) -> None:
         return
     else:
         # Получаем и обрабатываем сообщение 
-        #response = OpenaiFreeLast.get_answer_ofl(message.text)
-        answer="response" # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
+        response = OpenaiFreeLast.get_answer_ofl(message.text)
+        answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
         await message.answer(
             answer,
@@ -190,7 +190,7 @@ async def process_talk_bots(message: types.Message) -> None:
     print(177, message.chat.type )
 
     # Получаем и обрабатываем сообщение 
-    #response = OpenaiFreeLast.get_answer_ofl(message.text)
+    response = OpenaiFreeLast.get_answer_ofl(message.text)
     # response = openai.Completion.create( 
     #     model="text-davinci-003", 
     #     prompt=message.text, 
@@ -201,7 +201,7 @@ async def process_talk_bots(message: types.Message) -> None:
     #     presence_penalty=0.0, 
         #stop=["\n"] 
     #)
-    answer="response" # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
+    answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
     await message.answer(
         answer,
