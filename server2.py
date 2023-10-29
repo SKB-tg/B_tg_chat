@@ -44,13 +44,13 @@ promokod = '1003'
 promo="promo" + '-' + promokod
 
 # Устанавливаем соединение с Telegram API 
-#bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
+bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 base_url="https://b-tg-chat.onrender.com"
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
-#form_router = Router()
-#dp = Dispatcher()
+form_router = Router()
+dp = Dispatcher()
 #form_router.message.middleware(AccessMiddleware(ACCESS_ID))
 #dp.middleware.setup(AccessMiddleware(ACCESS_ID))
 
@@ -95,7 +95,7 @@ async def save_newuser(user):
 
 #@form_router.message(F.text.casefold() == "чатбот")
 @form_router.message(Command(commands=["start"]))
-async def command_start(message: Message, state: FSMContext) -> None:
+async def command_start(message: Message, state: FSMContext, bot: Bot, base_url: str) -> None:
     #await state.set_state(Form.name)
     await bot.set_chat_menu_button(
         chat_id=message.chat.id,
@@ -243,9 +243,9 @@ async def on_startup(bot: Bot, base_url: str):
 
 
 def main():
-    bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")
-    form_router = Router()
-    dp = Dispatcher()
+    # bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")
+    # form_router = Router()
+    # dp = Dispatcher()
     dp.include_router(form_router)
 
     app = Application()
