@@ -31,7 +31,7 @@ logging.basicConfig(level=logging.INFO)
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN)
-
+BUTTON_URL = os.getenv("BUTTON_URL")       #                 "https://api.render.com/deploy/srv-ckt4br0168ec73d1v8lg?key=Le5F86PGHfY")
 #lobal is_donat
 is_donat = False
 promokod = '1003'
@@ -94,7 +94,7 @@ async def command_start(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     await bot.set_chat_menu_button(
         chat_id=message.chat.id,
-        menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{base_url}")),# "Меню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\nМеню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\n"
+        menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{BUTTON_URL}")),# "Меню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\nМеню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\n"
     )
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
