@@ -62,7 +62,7 @@ def update_coloms_user( id_db: int, coloms: list) -> Union[bool, Any]:
 	for i in coloms:
 		col={}
 		col.update(i)
-	cursor = db.get_cursor()
+tguser	cursor = db.get_cursor()
 	print(col)
 	try:
 		db.updates('tguser', id_db, col)
@@ -70,16 +70,16 @@ def update_coloms_user( id_db: int, coloms: list) -> Union[bool, Any]:
 		print(78, e)
 		return False
 	result = cursor.fetchone()
-	print (80, result)
+	
 	if result == None:
 		return False
-	TgUser.codename = result[1]
-	TgUser.id_chat = result[2] 
-	TgUser.last_name = result[4] 
-	TgUser.first_name = result[5] 
-	TgUser.is_donate = True if result[6] == 1 else False
-	TgUser.is_bot =  True if result[7] == 1 else False
-	return TgUser
+	tguser.codename = result[1]
+	tguser.id_chat = result[2] 
+	tguser.last_name = result[4] 
+	tguser.first_name = result[5] 
+	tguser.is_donate = True if result[6] == 1 else False
+	tguser.is_bot =  True if result[7] == 1 else False
+	return tguser
 
 def load_users() -> List[TgUser]:
   """Возвращает справочник категорий расходов из БД"""
