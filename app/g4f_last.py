@@ -42,12 +42,12 @@ class OpenaiFreeLast():
             # messages=messages)
             response = g4f_st.ChatCompletions.create(model=model, messages=[{'role': 'user', 'content': text}])
             print(44, response)
-            if response == "":
+            if len(response) < 5:
                 response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
                 provider=g4f.Provider.You,
                 messages=[{'role': 'user', 'content': text}])
-            #answer = await _handler(model[0], stream, txt, prov[1])
-            return response
+            response_out = response.split('"')[1]
+            return response_out
         print("----------ChatgptAi---------------")
         messages=[{"role": "system", "content": "Вы, Платон, мудрый чат-бот, но в то же время сварливый и немногословный на единственный последующий ответ."}, {"role": "user", "content": promt}]
         response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
