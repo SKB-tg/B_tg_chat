@@ -161,6 +161,7 @@ async def command_donate(message: Message, state: FSMContext) -> None:
 @form_router.message( F.chat.func(lambda chat: chat.type == 'private'))
 async def process_write_menu2_bots(message: types.Message) -> None:
     user_name = message.from_user.username
+    first_name = message.from_user.first_name
     print(121, message.chat.type, get_tguser(user_name).codename )
     # if tg_user_is_db(user_name) != False:
     #     await save_newuser(message.from_user)
@@ -172,7 +173,7 @@ async def process_write_menu2_bots(message: types.Message) -> None:
         return
     else:
         # Получаем и обрабатываем сообщение 
-        response = OpenaiFreeLast.get_answer_ofl(message.text)
+        response = OpenaiFreeLast.get_answer_ofl(message.text, first_name=first_name)
         answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
         await message.answer(
@@ -184,13 +185,14 @@ async def process_talk_bots(message: types.Message) -> None:
     # await state.clear()
     # await state.set_state(Form.menu)
     user_name = message.from_user.username
+    first_name = message.from_user.first_name
     if tg_user_is_db(user_name) == False:
         new_user_dict = dict(await save_newuser(message.from_user))
         add_tg_user(new_user_dict)
     print(177, message.chat.type )
 
     # Получаем и обрабатываем сообщение 
-    response = OpenaiFreeLast.get_answer_ofl(message.text)
+    response = OpenaiFreeLast.get_answer_ofl(message.text, first_name=first_name)
     # response = openai.Completion.create( 
     #     model="text-davinci-003", 
     #     prompt=message.text, 
