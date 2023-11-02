@@ -22,6 +22,24 @@ def insert_blob(table: str, id_id, blob_data_tuple: tuple):
     except sqlite3.Error as error:
         print("Ошибка при работе с SQLite", error)
 
+def updates(table: str, id_id, column_values: Dict):
+    try:
+        columns = ', '.join( column_values.keys() )
+        values = tuple(column_values.values())
+        col = [ (str(i[0]) + '=' + str(i[1])) for i in column_values.items()]
+        cols_s=''
+        for l in col:
+            cols_s=cols_s+str(l)
+        placeholders = ", ".join( "?" * len(column_values.keys()) )
+        cursor.execute(
+            f"UPDATE {table} "
+            f"SET {cols_s} "
+            f"WHERE id={id_id}"
+            )
+        conn.commit()
+        print(36, id_id, columns, values, cols_s)
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
 
 
 def insert(table: str, column_values: Dict):
