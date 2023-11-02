@@ -1,4 +1,5 @@
 import asyncio
+import time
 #from g4f_home import OpenaiFree
 from app import g4f_st
 #from g4f_st import ChatCompletion
@@ -43,6 +44,7 @@ class OpenaiFreeLast():
             response = g4f_st.ChatCompletions.create(model=model, messages=[{'role': 'user', 'content': text}])
             print(44, response)
             if len(response) < 5:
+                time.sleep(25)
                 response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
                 provider=g4f.Provider.You,
                 messages=[{'role': 'user', 'content': text}])
