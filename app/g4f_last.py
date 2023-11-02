@@ -25,7 +25,7 @@ class OpenaiFreeLast():
     promt: str = ""
 
     @staticmethod
-    def get_answer_ofl(promt):
+    def get_answer_ofl(promt, first_name="неунывающий Саморитянин"):
         global nn
         nn +=  1
         model = 'gpt-3.5-turbo'
@@ -44,12 +44,13 @@ class OpenaiFreeLast():
             response = g4f_st.ChatCompletions.create(model=model, messages=[{'role': 'user', 'content': text}])
             print(44, response)
             if len(response) < 5:
-                time.sleep(25)
-                response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
-                provider=g4f.Provider.You,
-                messages=[{'role': 'user', 'content': text}])
-            response_out = response.split('"')[1]
-            return response_out
+                response = f"Эй, друг как тебя, а вот {first_name} повторика будь добр вопрос, а то я пока курил на балконе, с темы общения походу соскочил ..."
+                return response
+                # response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
+                # provider=g4f.Provider.You,
+                # messages=[{'role': 'user', 'content': text}])
+                # response_out = response.split('"')[1]
+            return response
         print("----------ChatgptAi---------------")
         messages=[{"role": "system", "content": "Вы, Платон, мудрый чат-бот, но в то же время сварливый и немногословный на единственный последующий ответ."}, {"role": "user", "content": promt}]
         response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
