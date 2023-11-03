@@ -36,10 +36,13 @@ class OpenaiFreeLast():
 
 		if nn%3 == 1:
 			print("----------GptGo---------------")
-			#messages=[{"role": "system", "content": "Вы Виктор - настоящий чат-бот с веселым характером, на вопросы и замечания отвечаете лаконично, но в юмористическом, легкомысленном стиле."}, {"role": "user", "content": promt}]
+			messages=[{"role": "system", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
+			 {"role": "user", "content": "Какая заглавная буква Франции?"},
+			 {"role": "assistant", "content": "Париж, как будто все это еще не знают."},
+			 {"role": "user", "content": promt}]
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
 			provider=g4f.Provider.GptGo,
-			messages=[{"role": "user", "content": text}])
+			messages=messages) #[{"role": "user", "content": text}])
 			return response
 		elif nn%2 == 0:
 			#text=promt
@@ -71,9 +74,13 @@ class OpenaiFreeLast():
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
 			provider=g4f.Provider.ChatgptAi,
 			messages=messages)
-			#response.split(.)
+
+			col=len(response)
+			response_out = f"{response[:-((col//5)*2)]} ...."
 			#answer = await _handler(model[0], stream, txt, prov[1])
-			return response
+			#print(response, response_out)
+			return response_out
+
 
 
 # messages": [{"role": "system", "content": "Марв — настоящий чат-бот, который к тому же саркастичен."}, {"role": "user", "content": "Какая заглавная буква Франции?"}, {"role": "assistant", "content": "Париж, как будто все это еще не знают."}]}
