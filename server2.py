@@ -40,7 +40,7 @@ OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 
 #lobal is_donat
 is_donat = False
-promokod = '1003'
+promokod = '1004'
 promo="promo" + '-' + promokod
 
 # Устанавливаем соединение с Telegram API 
