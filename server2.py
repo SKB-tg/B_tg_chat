@@ -97,10 +97,10 @@ async def save_newuser(user):
 @form_router.message(Command(commands=["start"]))
 async def command_start(message: Message, state: FSMContext, bot: Bot, base_url: str) -> None:
     #await state.set_state(Form.name)
-    await bot.set_chat_menu_button(
-        chat_id=message.chat.id,
-        menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{base_url}")),# "Меню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\nМеню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\n"
-    )
+    # await bot.set_chat_menu_button(
+    #     chat_id=message.chat.id,
+    #     menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{base_url}")),# "Меню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\nМеню\n/newpost     Создать новы пост\n/newdraft     Создать черновой пост\n/newpost     Создать новы пост\n/newpost     Создать новы пост\n/newpost     Создать  новы пост\n"
+    # )
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
@@ -242,6 +242,9 @@ async def demo_handler(request: Request):
 async def on_startup(bot: Bot, base_url: str):
     await bot.delete_webhook()
     await bot.set_webhook(f"{base_url}/webhook")
+    await bot.set_chat_menu_button(
+    menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{base_url}"))
+    )
 
 
 def main():
