@@ -267,6 +267,7 @@ def main():
         dispatcher=dp, bot=bot,
     ).register(app, path="/webhook")
     app.router.add_get("/", demo_handler)
+    app.router.add_static("/static", Path("./app/static"))
     setup_application(app, dp, bot=bot)
 
     run_app(app, host="0.0.0.0", port=80)
