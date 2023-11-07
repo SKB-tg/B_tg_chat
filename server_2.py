@@ -75,10 +75,10 @@ def main():
         dispatcher=dp, bot=bot,
     ).register(app, path="/webhook")
     app.router.add_get("/", main_rout) # в более сложном варианте запихнуть в ф router.py
-    app.router.add_static("/static", Path("app/static"))
+    app.router.add_static("/static", Path("./app/static"))
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=8080)
+    run_app(app, host="0.0.0.0", port=80)
 
 if __name__ == '__main__':
     main()
