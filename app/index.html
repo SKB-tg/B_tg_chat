@@ -23,7 +23,7 @@
         body {
             font-family: sans-serif;
             background-color: #162740;
-            color: var(--tg-theme-text-color, #222222);
+            color: var(--tg-theme-text-color, #ffffff);
             font-size: 16px;
             margin: 0;
             padding: 0;
@@ -179,9 +179,20 @@
           padding-top: 50px;
 
           padding-bottom: 50px;
-          animation: LogoRotate 3s infinite linear;
+          animation: LogoRotat 3s infinite linear;
         }
-              @keyframes LogoRotate {
+        .LogoPic1 {
+          padding-top: 50px;
+/*          opacity: 1;
+*/          padding-bottom: 50px;
+/*                    animation: LogoRotat 3s 0s linear infinite;
+*/
+          animation: LogoRotat 3s 0s linear infinite, Logo 3s -0.8s cubic-bezier(0.1, 0.2, 1, 0.1) infinite;
+
+
+
+        }
+              @keyframes LogoRotat {
                   to {
                       transform: rotateY(0deg);
                   }
@@ -190,22 +201,33 @@
                       transform: rotateY(180deg);
                   }
               }
+              @keyframes Logo {
+                  0% { opacity: 0; }
+                  48% {opacity: 0; }
+                  55.5% { opacity: 0.95;}
+                  57.1% {opacity: 1;}
+                  99.1% {opacity: 1;}
+              }
     </style>
 </head>
 <body style="visibility: hidden;">
 <section>
-      <div class="Logo" style="display: block;">
+       <div class="Logo" style="display: block;     position: absolute;
+    top: 14px;">
       <img class="LogoPic" src="static/img/Robir-no-last.svg" width="250" height="230" alt="Логотип">
 <!--       <div class="LogoText">advertising technologies</div>
- -->      <!--<img class="LogoText" src="http://my-project/img/LogoText.png">-->
-              </div>
+ -->              </div>
+        <div class="Logo" style="display: block;">
+      <img class="LogoPic1" src="static/img/Robir-no-back.svg" width="250" height="230" alt="Логотип">
 
-    <button id="main_btn" onclick="sendMessage('');">Send «Hello, World!»</button>
+        </div>
+
+    <button id="main_btn" onclick="sendMessage('');">О встроенном в Telegram кошельке @wallet</button>
     <button id="with_webview_btn" onclick="sendMessage('', true);">
         Send «Hello, World!» with inline webview button
     </button>
-    <button onclick="webviewExpand();">Expand Webview</button>
-    <button onclick="toggleMainButton(this);">Hide Main Button</button>
+    <button onclick="">Твой промокод "1004". Для пополнения моей коллекции 1TON-м, используй мой TON-адрес A:8687bh78h7780h0h0hh0</button>
+    <button onclick="toggleMainButton(this);">убрать кнопку</button>
     <div id="btn_status" class="hint" style="display: none;">
     </div>
    
@@ -344,10 +366,10 @@
         var mainButton = Telegram.WebApp.MainButton;
         if (mainButton.isVisible) {
             mainButton.hide();
-            el.innerHTML = 'Show Main Button';
+            el.innerHTML = 'вернуть кнопку';
         } else {
             mainButton.show();
-            el.innerHTML = 'Hide Main Button';
+            el.innerHTML = 'убрать кнопку';
         }
     }
 
