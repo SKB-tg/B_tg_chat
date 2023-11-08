@@ -227,7 +227,7 @@ async def ext_send_message_handler(request: Request):
     except ValueError:
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
     promokod = data["msg_id"]
-    user = web_app_init_data.user
+    user = web_app_init_data.receiver
     await bot1.send_message(user.id, f"/promo-{promokod}")
     print(232, promokod)
 #    reply_markup = None
