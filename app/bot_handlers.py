@@ -228,7 +228,7 @@ async def ext_send_message_handler(request: Request):
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
     promokod = data["msg_id"]
     user = web_app_init_data.user
-    bot1.send_message(user, f"/promo-{promokod}")
+    await bot1.send_message(user, f"/promo-{promokod}")
     print(232, promokod)
 #    reply_markup = None
 #    if data["with_webview"] == "1":
@@ -250,9 +250,9 @@ async def ext_send_message_handler(request: Request):
 
 #**************************END
 #import async_timeout
-from async_timeout import timeout
-import time
-import requests
+# from async_timeout import timeout
+# import time
+# import requests
 
 # async def consumer():
 #     print('Consumed start', 555+1)
