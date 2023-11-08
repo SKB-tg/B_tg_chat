@@ -32,7 +32,7 @@ from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_co
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_2")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 #print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
 
