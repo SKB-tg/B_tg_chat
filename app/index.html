@@ -261,11 +261,11 @@
                 $('button').prop('disabled', false);
                 if (result.response) {
                     if (result.response.ok) {
+                        if (!el) {webviewClose() }
                         $('#btn_status').html('Message sent successfully!').addClass('ok').show();
                     } else {
                         $('#btn_status').text(result.response.description).addClass('err').show();
                         alert(result.response.description);
-                        if (!el) {webviewClose() }
                     }
                 } else {
                     $('#btn_status').text('Unknown error').addClass('err').show();
