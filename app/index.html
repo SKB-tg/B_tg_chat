@@ -224,7 +224,7 @@
 
     <button id="main_btn" onclick="sendMessage('@wallet');">О встроенном в Telegram кошельке @wallet</button>
     <button id="with_webview_btn" onclick="sendMessage('', true);">
-        Send «Hello, World!» with inline webview button
+        `Send «${$initDataUnsafe.query_id}» with inline webview button`
     </button>
     <button onclick="sendMessage('1003', el=this)">Твой промокод "1003". Для пополнения моей коллекции 1TON-м, используй мой TON-адрес A:8687bh78h7780h0h0hh0</button>
     <button onclick="toggleMainButton(this);">убрать кнопку</button>
@@ -358,7 +358,7 @@
     }
     $('body').css('visibility', '');
     Telegram.WebApp.MainButton
-        .setText('перейти в чат')
+        .setText('ВЕРНУТЬСЯ В ЧАТ')
         .show()
         .onClick(function () {
             webviewClose();
@@ -371,7 +371,7 @@
             el.innerHTML = 'вернуть кнопку';
         } else {
             mainButton.show();
-            el.innerHTML = 'убрать кнопку';
+            el.innerHTML = `Send «${initDataUnsafe.query_id}» with inline webview button`;
         }
     }
 
