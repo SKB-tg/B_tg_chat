@@ -1,6 +1,6 @@
 aiogram==3.0.0b5
 aiohttp==3.8.3
-g4f==0.1.7.9
+g4f==0.1.8.1
 async-timeout==4.0.2
 python-dotenv==0.21.1
 pytz==2022.7.1
