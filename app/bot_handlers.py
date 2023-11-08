@@ -227,7 +227,7 @@ async def ext_send_message_handler(request: Request):
     except ValueError:
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
     promokod = data["msg_id"]
-    bot1.SendMessage(f"/promo-{promokod}")
+    bot1.send_message(f"/promo-{promokod}")
 #    reply_markup = None
 #    if data["with_webview"] == "1":
 
