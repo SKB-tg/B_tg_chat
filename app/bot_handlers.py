@@ -240,7 +240,7 @@ async def ext_send_message_handler(request: Request):
             id=web_app_init_data.query_id,
             title="Demo",
             input_message_content=InputTextMessageContent(
-                message_text=f"/start-{promokod}",
+                message_text=f"/promo-{promokod}",
                 parse_mode=None,
             ),
             reply_markup=None,
