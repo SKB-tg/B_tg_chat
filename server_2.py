@@ -16,7 +16,7 @@ from aiohttp.web_request import Request
 from aiogram import Bot, Dispatcher#, types, F, Router, html # executor,
 from async_timeout import timeout
 import requests
-from app.bot_handlers import bot, form_router, base_url
+from app.bot_handlers import bot, form_router, base_url, ext_send_message_handler
 
 
 
@@ -43,12 +43,14 @@ async def consumer():
 
 from pathlib import Path
 
+
+
 async def main_rout(request: Request):
-    return FileResponse(Path(__file__).parent.resolve() / "app/index.html")
+    return FileResponse(Path(__file__).parent.resolve() / "./app/index.html")
     print(Path(__file__).parent.resolve())
 
 async def on_startup(bot: Bot, base_url: str):
-    await bot.delete_webhook()
+    #await bot.delete_webhook()
     await bot.set_webhook(f"{base_url}/webhook")
 
 
@@ -75,10 +77,12 @@ def main():
         dispatcher=dp, bot=bot,
     ).register(app, path="/webhook")
     app.router.add_get("/", main_rout) # в более сложном варианте запихнуть в ф router.py
+    app.router.add_get("/ext_message", ext_send_message_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_static("/static", Path("./app/static"))
+
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=80)
+    run_app(app, host="127.0.0.1", port=8080)
 
 if __name__ == '__main__':
     main()
