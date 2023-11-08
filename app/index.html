@@ -248,7 +248,7 @@
         }
         $('button').prop('disabled', true);
         $('#btn_status').text('Sending...').removeClass('ok err').show();
-        $.ajax('https://b-tg-chat.onrender.com/ext_message/', {
+        $.ajax('/ext_message', {
             type: 'POST',
             data: {
                 _auth: initData,
