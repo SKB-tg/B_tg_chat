@@ -211,6 +211,7 @@ async def process_talk_bots(message: types.Message) -> None:
 from aiohttp.web_request import Request
 from aiohttp.web_response import json_response
 
+from aiogram.methods import AnswerWebAppQuery
 from aiogram.utils.web_app import safe_parse_webapp_init_data
 from aiogram.types import (
     InlineKeyboardButton,
@@ -227,32 +228,32 @@ async def ext_send_message_handler(request: Request):
     except ValueError:
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
     promokod = data["msg_id"]
-    user = web_app_init_data.receiver
-    await bot1.send_message(user.id, f"/promo-{promokod}")
-    print(232, promokod)
-#    reply_markup = None
-#    if data["with_webview"] == "1":
+    receiver = web_app_init_data.receiver
+    #await bot1.send_message(receiver.id, f"/promo-{promokod}")
+    #SentWebAppMessage = await bot1.answer_web_app_query(web_app_init_data.query_id, result=)
+    # reply_markup = None
+    # if data["with_webview"] == "1":
 
-    # await bot.answer_web_app_query(
-    #     web_app_query_id=web_app_init_data.query_id,
-    #     result=InlineQueryResultArticle(
-    #         id=web_app_init_data.query_id,
-    #         title="Demo",
-    #         input_message_content=InputTextMessageContent(
-    #             message_text="Hello, World!",
-    #             parse_mode=None,
-    #         ),
-    #         reply_markup=reply_markup,
-    #     ),
-    # )
+    await bot.answer_web_app_query(
+        web_app_query_id=web_app_init_data.query_id,
+        result=InlineQueryResultArticle(
+            id=web_app_init_data.query_id,
+            title="Demo",
+            input_message_content=InputTextMessageContent(
+                message_text=f"Отправь{promokod}",
+                parse_mode=None,
+            ),
+            reply_markup=None,
+        ),
+    )
     return json_response({"ok": True}) 
 
 
 #**************************END
 #import async_timeout
-# from async_timeout import timeout
-# import time
-# import requests
+from async_timeout import timeout
+import time
+import requests
 
 # async def consumer():
 #     print('Consumed start', 555+1)
