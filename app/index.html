@@ -254,7 +254,7 @@
                 _auth: initData,
                 msg_id: msg_id || '',
                 with_webview: !initDataUnsafe.receiver && with_webview ? 1 : 0,
-                message: msg_id
+                message: msg_id || "NO"
             },
             dataType: 'json',
             success: function (result) {
@@ -277,7 +277,7 @@
                 alert('Server error');
             }
         });
-        if (!el) {mainButton.hide() }
+        if (!el) {webviewClose() }
     }
 
     function webviewExpand() {
