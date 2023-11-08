@@ -32,7 +32,7 @@ from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_co
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_TOKEN_2 = os.getenv("TELEGRAM_BOT_TOKEN_2")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 #print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
 
@@ -42,7 +42,7 @@ promokod = '1003'
 promo="promo" + '-' + promokod
 
 # Устанавливаем соединение с Telegram API 
-bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
+bot = Bot(TELEGRAM_BOT_TOKEN_2)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 base_url="https://b-tg-chat.onrender.com"
 
 # Устанавливаем соединение с OpenAI API 
@@ -206,6 +206,45 @@ async def process_talk_bots(message: types.Message) -> None:
     await message.answer(
         answer,
             reply_markup=ReplyKeyboardRemove())
+
+#************************обработчик  of HTML
+from aiohttp.web_request import Request
+from aiohttp.web_response import json_response
+
+from aiogram.utils.web_app import safe_parse_webapp_init_data
+from aiogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InlineQueryResultArticle,
+    InputTextMessageContent,
+    WebAppInfo,
+)
+async def ext_send_message_handler(request: Request):
+    bot1: Bot = request.app["bot"]
+    data = await request.post()
+    try:
+        web_app_init_data = safe_parse_webapp_init_data(token=bot.token, init_data=data["_auth"])
+    except ValueError:
+        return json_response({"ok": False, "err": "Unauthorized"}, status=401)
+    promokod = data["message"]
+    bot1.SendMessage(f"/promo-{promokod}")
+#    reply_markup = None
+#    if data["with_webview"] == "1":
+
+    # await bot.answer_web_app_query(
+    #     web_app_query_id=web_app_init_data.query_id,
+    #     result=InlineQueryResultArticle(
+    #         id=web_app_init_data.query_id,
+    #         title="Demo",
+    #         input_message_content=InputTextMessageContent(
+    #             message_text="Hello, World!",
+    #             parse_mode=None,
+    #         ),
+    #         reply_markup=reply_markup,
+    #     ),
+    # )
+    return json_response({"ok": True}) 
+
 
 #**************************END
 #import async_timeout

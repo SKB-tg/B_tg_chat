@@ -222,11 +222,11 @@
 
         </div>
 
-    <button id="main_btn" onclick="sendMessage('');">О встроенном в Telegram кошельке @wallet</button>
+    <button id="main_btn" onclick="sendMessage('@wallet');">О встроенном в Telegram кошельке @wallet</button>
     <button id="with_webview_btn" onclick="sendMessage('', true);">
         Send «Hello, World!» with inline webview button
     </button>
-    <button onclick="">Твой промокод "1004". Для пополнения моей коллекции 1TON-м, используй мой TON-адрес A:8687bh78h7780h0h0hh0</button>
+    <button onclick="sendMessage('1004', el=this)">Твой промокод "1004". Для пополнения моей коллекции 1TON-м, используй мой TON-адрес A:8687bh78h7780h0h0hh0</button>
     <button onclick="toggleMainButton(this);">убрать кнопку</button>
     <div id="btn_status" class="hint" style="display: none;">
     </div>
@@ -241,19 +241,20 @@
     var initData = Telegram.WebApp.initData || '';
     var initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
 
-    function sendMessage(msg_id, with_webview) {
+    function sendMessage(msg_id, with_webview, el=null) {
         if (!initDataUnsafe.query_id) {
             alert('WebViewQueryId not defined');
             return;
         }
         $('button').prop('disabled', true);
         $('#btn_status').text('Sending...').removeClass('ok err').show();
-        $.ajax('/demo/sendMessage', {
+        $.ajax('/ext_message', {
             type: 'POST',
             data: {
                 _auth: initData,
                 msg_id: msg_id || '',
                 with_webview: !initDataUnsafe.receiver && with_webview ? 1 : 0
+                message: 
             },
             dataType: 'json',
             success: function (result) {
@@ -276,6 +277,7 @@
                 alert('Server error');
             }
         });
+        if (!el) {mainButton.hide() }
     }
 
     function webviewExpand() {
@@ -356,7 +358,7 @@
     }
     $('body').css('visibility', '');
     Telegram.WebApp.MainButton
-        .setText('CLOSE WEBVIEW')
+        .setText('перейти в чат')
         .show()
         .onClick(function () {
             webviewClose();
