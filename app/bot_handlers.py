@@ -32,7 +32,7 @@ from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_co
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_2")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 #print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
 
@@ -226,7 +226,7 @@ async def ext_send_message_handler(request: Request):
         web_app_init_data = safe_parse_webapp_init_data(token=bot.token, init_data=data["_auth"])
     except ValueError:
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
-    promokod = data["message"]
+    promokod = data["msg_id"]
     bot1.SendMessage(f"/promo-{promokod}")
 #    reply_markup = None
 #    if data["with_webview"] == "1":

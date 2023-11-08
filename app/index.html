@@ -253,8 +253,8 @@
             data: {
                 _auth: initData,
                 msg_id: msg_id || '',
-                with_webview: !initDataUnsafe.receiver && with_webview ? 1 : 0,
-                message: msg_id || "NO"
+                with_webview: !initDataUnsafe.receiver && with_webview ? 1 : 0
+                //message: msg_id || "NO"
             },
             dataType: 'json',
             success: function (result) {
@@ -265,6 +265,7 @@
                     } else {
                         $('#btn_status').text(result.response.description).addClass('err').show();
                         alert(result.response.description);
+                        if (!el) {webviewClose() }
                     }
                 } else {
                     $('#btn_status').text('Unknown error').addClass('err').show();
@@ -277,7 +278,6 @@
                 alert('Server error');
             }
         });
-        if (!el) {webviewClose() }
     }
 
     function webviewExpand() {
