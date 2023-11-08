@@ -234,7 +234,7 @@ async def ext_send_message_handler(request: Request):
     # reply_markup = None
     # if data["with_webview"] == "1":
 
-    await bot.answer_web_app_query(
+    await bot1.answer_web_app_query(
         web_app_query_id=web_app_init_data.query_id,
         result=InlineQueryResultArticle(
             id=web_app_init_data.query_id,
