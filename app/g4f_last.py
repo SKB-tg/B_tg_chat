@@ -34,7 +34,7 @@ class OpenaiFreeLast():
 		#text=f"На тему этой фразы дай реплику коротко, конкретно, но в ворчливом, поучительном стиле: '{promt}'"
 
 
-		if nn%3 == 1:
+		if nn//3 == 1:
 			print("----------GptGo---------------")
 			messages=[{"role": "system", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
 			 {"role": "user", "content": "Какая заглавная буква Франции?"},
@@ -44,7 +44,7 @@ class OpenaiFreeLast():
 			provider=g4f.Provider.GptGo,
 			messages=messages) #[{"role": "user", "content": text}])
 			return response
-		elif nn%2 == 0:
+		elif nn//2 == 0:
 			#text=promt
 			#text=f"На тему этой фразы дай совет коротко, конкретно, но в шутливом, несерьезном стиле: '{promt}'"
 			#response = g4f_st.ChatCompletion.create(messages=messages, provider=GetGpt)
@@ -68,7 +68,7 @@ class OpenaiFreeLast():
 				# response_out = response.split('"')[1]
 			#return "response"
 
-		elif nn%2 == 1:
+		elif nn//2 == 1:
 			print("----------ChatgptAi---------------")
 			messages=[{"role": "system", "content": "Вы, Платон, мудрый чат-бот, но в то же время сварливый и немногословный на единственный последующий ответ."}, {"role": "user", "content": promt}]
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
