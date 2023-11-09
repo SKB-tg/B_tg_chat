@@ -164,7 +164,7 @@ async def process_write_menu2_bots(message: types.Message) -> None:
     # if tg_user_is_db(user_name) != False:
     #     await save_newuser(message.from_user)
     _is_donat=get_tguser(user_name).is_donate
-    if ((message.text == '/promo') or (_is_donat == False)) :
+    if ((message.text.find('/promo') != -1) or (_is_donat == False)) :
         await message.answer(
             "Неправильно набрана команда, повторите!",
             reply_markup=ReplyKeyboardRemove())
@@ -212,7 +212,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import json_response
 
 from aiogram.methods import AnswerWebAppQuery
-from aiogram.utils.web_app import safe_parse_webapp_init_data
+from aiogram.utils.web_app import safe_parse_webapp_init_data, check_webapp_signature 
 from aiogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -234,7 +234,7 @@ async def ext_send_message_handler(request: Request):
     # reply_markup = None
     # if data["with_webview"] == "1":
 
-    await bot1.answer_web_app_query(
+    await bot.answer_web_app_query(
         web_app_query_id=web_app_init_data.query_id,
         result=InlineQueryResultArticle(
             id=web_app_init_data.query_id,
@@ -248,7 +248,13 @@ async def ext_send_message_handler(request: Request):
     )
     return json_response({"ok": True}) 
 
+async def check_data_handler(request: Request):
+    bot: Bot = request.app["bot"]
 
+    data = await request.post()
+    if check_webapp_signature(bot.token, data["_auth"]):
+        return json_response({"ok": True})
+    return json_response({"ok": False, "err": "Unauthorized"}, status=401)
 #**************************END
 #import async_timeout
 from async_timeout import timeout
