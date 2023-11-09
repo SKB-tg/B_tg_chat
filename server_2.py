@@ -16,7 +16,7 @@ from aiohttp.web_request import Request
 from aiogram import Bot, Dispatcher#, types, F, Router, html # executor,
 from async_timeout import timeout
 import requests
-from app.bot_handlers import bot, form_router, base_url, ext_send_message_handler
+from app.bot_handlers import bot, form_router, base_url, ext_send_message_handler, check_data_handler
 
 
 
@@ -78,11 +78,12 @@ def main():
     ).register(app, path="/webhook")
     app.router.add_get("/", main_rout) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/ext_message", ext_send_message_handler) # в более сложном варианте запихнуть в ф router.py
+    app.router.add_post("/checkData", check_data_handler)
     app.router.add_static("/static", Path("./app/static"))
 
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=80)
+    run_app(app, host="127.0.0.1", port=8080)
 
 if __name__ == '__main__':
     main()
