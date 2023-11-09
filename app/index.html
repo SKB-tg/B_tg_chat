@@ -33,7 +33,9 @@
         a {
             color: var(--tg-theme-link-color, #2678b6);
         }
-
+        button a {
+            color: var(--tg-theme-link-color, #ffffff);
+        }
         button {
             display: block;
             width: 100%;
@@ -222,7 +224,7 @@
 
         </div>
 
-    <button id="main_btn" onclick="">О встроенном в Telegram кошельке @wallet<a href="https://t.me/help_develop_men/317"></a></button>
+    <button id="main_btn" onclick=""><a href="https://t.me/help_develop_men/317">О встроенном в Telegram кошельке @wallet</a></button>
 <!--             <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a>
             (opens outside webview)
         </li>
@@ -345,7 +347,7 @@
     $('#text_field').focus();
     if (initDataUnsafe.query_id && initData) {
         $('#webview_data_status').show();
-        $.ajax('/demo/checkData', {
+        $.ajax('/checkData', {
             type: 'POST',
             data: {_auth: initData},
             dataType: 'json',
@@ -366,7 +368,7 @@
         .setText('ВЕРНУТЬСЯ В ЧАТ')
         .show()
         .onClick(function () {
-            webviewExpand();
+            webviewClose();
         });
 
     function toggleMainButton(el) {
