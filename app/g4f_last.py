@@ -36,9 +36,9 @@ class OpenaiFreeLast():
 
 		if nn//3 == 1:
 			print("----------GptGo---------------")
-			messages=[{"role": "system", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
-			 {"role": "user", "content": "Какая заглавная буква Франции?"},
-			 {"role": "assistant", "content": "Париж, как будто все это еще не знают."},
+			messages=[{"role": "assistant", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
+			 #{"role": "user", "content": "Какая заглавная буква Франции?"},
+			 #{"role": "assistant", "content": "Париж, как будто все это еще не знают."},
 			 {"role": "user", "content": promt}]
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
 			provider=g4f.Provider.GptGo,

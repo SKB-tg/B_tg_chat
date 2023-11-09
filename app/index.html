@@ -222,11 +222,11 @@
 
         </div>
 
-    <button id="main_btn" onclick="sendMessage('@wallet');">О встроенном в Telegram кошельке @wallet</button>
+    <button id="main_btn" onclick="">О встроенном в Telegram кошельке @wallet</button>
     <button id="with_webview_btn" onclick="sendMessage('', true);">
         Для пополнения моей коллекции 1TON-м используй мой TON-адрес A:8687bh78h7780h0h0hh0
     </button>
-    <button onclick="sendMessage('1003', el=this)">Твой промокод "1003"</button>
+    <button onclick="sendMessage('1003', el=this)">Вход по free-promo-1003</button>
     <button onclick="toggleMainButton(this);">убрать кнопку</button>
     <div id="btn_status" class="hint" style="display: none;">
     </div>
@@ -265,11 +265,11 @@
                         $('#btn_status').html('Message sent successfully!').addClass('ok').show();
                     } else {
                         $('#btn_status').text(result.response.description).addClass('err').show();
-                        alert(result.response.description);
+                        //alert(result.response.description);
                     }
                 } else {
                     $('#btn_status').text('Unknown error').addClass('err').show();
-                    alert('Unknown error');
+                    //alert('Unknown error');
                 }
             },
             error: function (xhr) {
