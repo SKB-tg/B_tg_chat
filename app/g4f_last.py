@@ -53,7 +53,7 @@ class OpenaiFreeLast():
 			messages=messages)
 
 			col=len(response)
-			response_out = f"{response[:-((col//5)*1)]} ...."
+			response_out = f"{response[:-((col//5)*0)]} ...."
 			return response_out
 
 		elif nn%1 == 0:
