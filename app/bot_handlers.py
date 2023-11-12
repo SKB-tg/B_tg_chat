@@ -204,7 +204,7 @@ async def process_talk_bots(message: types.Message) -> None:
     answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
     await message.answer(
-        answer,
+        response,
             reply_markup=ReplyKeyboardRemove())
 
 #************************обработчик  of HTML
