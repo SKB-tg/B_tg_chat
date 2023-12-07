@@ -27,7 +27,6 @@ async def consumer():
     print('Consumed start', 555+1)
     #Запрос в ДБ и отсылка тг
     #Запрос  на разбудить
-    #requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text=start')
     time.sleep(1)
     try:
         return
@@ -55,10 +54,9 @@ async def on_startup(bot: Bot, base_url: str):
 
 
 def main():
-    #bot = Bot("6163364880:AAGSbyRC5avfSuSzCn3whB5vcvwL2QS5mlc")
+    #bot = Bot("")
     #form_router = Router
     dp = Dispatcher()
-    #requests.get('https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id='+str(5146071572)+'&text=start.')
     dp.include_router(form_router)
 
     app = Application()
