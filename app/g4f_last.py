@@ -36,9 +36,9 @@ class OpenaiFreeLast():
 
 		if nn%3 == 0:
 			print("----------GPTalk---------------")
-			messages=[{"role": "system", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
-			 {"role": "user", "content": "Какая столица Италии?"},
-			 {"role": "assistant", "content": "Рим, как будто все это еще не знают. Да и тебе давно пора выучить."},
+			messages=[{#"role": "system", "content": "Ты Виктор - настоящий чат-бот с веселым характером, на вопросы и реплики даешь совет лаконично, но с сарказмом, в легком стиле."},
+			 #{"role": "user", "content": "Какая столица Италии?"},
+			 #{"role": "assistant", "content": "Рим, как будто все это еще не знают. Да и тебе давно пора выучить."},
 			 {"role": "user", "content": promt}]
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
 			provider=g4f.Provider.GPTalk,
