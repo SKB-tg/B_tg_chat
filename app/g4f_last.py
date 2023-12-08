@@ -41,7 +41,7 @@ class OpenaiFreeLast():
 			 #{"role": "assistant", "content": "Рим, как будто все это еще не знают. Да и тебе давно пора выучить."},
 			 {"role": "user", "content": promt}]
 			response = g4f.ChatCompletion.create(model=g4f.models.gpt_35_turbo,
-			provider=g4f.Provider.GPTalk,
+			provider=g4f.Provider.GptGo,
 			messages=messages) #[{"role": "user", "content": text}])
 			return response
 
