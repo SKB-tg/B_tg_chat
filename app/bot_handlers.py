@@ -22,7 +22,7 @@ from aiogram.filters import Command, Filter, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove,
- InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update)
+ InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, PollAnswer)
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
@@ -32,6 +32,7 @@ from app.models import add_tg_user, tg_user_is_db, get_tguser, TgUser, update_co
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+FINISH_NUMBER = os.getenv("FINISH_NUMBER")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 OPENAI_KEY_API = os.getenv("OPENAI_KEY_API")
 #print(OPENAI_KEY_API, TELEGRAM_BOT_TOKEN_2)
@@ -204,8 +205,34 @@ async def process_talk_bots(message: types.Message) -> None:
     answer=response # 'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
     await message.answer(
-        response,
+        answer,
             reply_markup=ReplyKeyboardRemove())
+
+#*******************************************poll_handler
+# инициализируем словарь для хранения результатов викторины
+quiz_results = {}
+users=[]
+
+@form_router.poll_answer()
+async def poll_answer_handler(poll_answer: types.PollAnswer) -> Any:
+    # заполняем словарь ключами - порядковыми номерами пользователей
+    users.append(poll_answer.user)
+    for user in users:
+        quiz_results[user.id] = 0
+    # проверяем, что это правильный ответ на викторину
+    if poll_answer.option_ids == [0]:
+        # получаем порядковый номер пользователя
+        user_id = poll_answer.user.id
+        # увеличиваем количество правильных ответов пользователя в словаре
+        quiz_results[user_id] += 1
+        # проверяем, достиг ли пользователь финишного номера
+        if quiz_results[user_id] == 2:#FINISH_NUMBER:
+            # отправляем поздравление пользователю
+            await bot.send_message(poll_answer.voter_chat,f"Поздравляем, {user_id}! Вы первый ответили правильно на все вопросы!")
+    else:
+        # если ответ неправильный, просто игнорируем его
+        pass
+
 
 #************************обработчик  of HTML
 from aiohttp.web_request import Request
