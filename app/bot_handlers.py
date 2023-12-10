@@ -48,6 +48,7 @@ base_url="https://b-tg-chat.onrender.com"
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
+p_router = Router()
 form_router = Router()
 #dp = Dispatcher()
 #form_router.message.middleware(AccessMiddleware(ACCESS_ID))
@@ -91,7 +92,7 @@ async def save_newuser(user):
     # def start_message(message):
     #     bot.send_message(message.chat.id, 'Hello friend! Ты попал в чат HelperGPT(на алгоритме типа ИИ) для общения и консультаций принадлежащий закрытому сообществу!\nВход платный если у вас нет промокода\n("/promo-****" * - символ) Войти по промокоду\n"/donate" Войти с переводом доната\n"/help" справочная информация по HelperGPT\nВведите и отправте /promo и 4-ре символа промокода(прим.- /promo-555m)\nили отправте команду-/donate') # Настраиваем обработчики сообщений 
 #**********************************************
-@form_router.poll()
+@p_router.poll()
 async def poll_handler(poll: types.Poll):
     mess=str(f"id:{poll.id} anan:{poll.is_anonymous}")
     requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={mess}')
