@@ -58,7 +58,7 @@ def main():
     #form_router = Router
     dp = Dispatcher()
     dp.include_router(p_router)
-    dp.include_router(form_router)
+    p_router.include_router(form_router)
 
     app = Application()
     dp["base_url"] = base_url
