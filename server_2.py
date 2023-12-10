@@ -16,7 +16,7 @@ from aiohttp.web_request import Request
 from aiogram import Bot, Dispatcher#, types, F, Router, html # executor,
 from async_timeout import timeout
 import requests
-from app.bot_handlers import bot, form_router, base_url, ext_send_message_handler, check_data_handler
+from app.bot_handlers import bot, form_router, base_url, ext_send_message_handler, check_data_handler, p_router
 
 
 
@@ -57,6 +57,7 @@ def main():
     #bot = Bot("")
     #form_router = Router
     dp = Dispatcher()
+    dp.include_router(p_router)
     dp.include_router(form_router)
 
     app = Application()
