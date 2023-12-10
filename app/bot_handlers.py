@@ -90,7 +90,13 @@ async def save_newuser(user):
     # @bot.message_handler(commands=["start"])
     # def start_message(message):
     #     bot.send_message(message.chat.id, 'Hello friend! Ты попал в чат HelperGPT(на алгоритме типа ИИ) для общения и консультаций принадлежащий закрытому сообществу!\nВход платный если у вас нет промокода\n("/promo-****" * - символ) Войти по промокоду\n"/donate" Войти с переводом доната\n"/help" справочная информация по HelperGPT\nВведите и отправте /promo и 4-ре символа промокода(прим.- /promo-555m)\nили отправте команду-/donate') # Настраиваем обработчики сообщений 
-
+#**********************************************
+@form_router.poll()
+async def poll_handler(poll: types.Poll):
+    mess=str(f"id:{poll.id} anan:{poll.is_anonymous}")
+    requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={mess}')
+ 
+ #*******************************************
 
 #@form_router.message(F.text.casefold() == "чатбот")
 @form_router.message(Command(commands=["start"]))
@@ -210,31 +216,28 @@ async def process_talk_bots(message: types.Message) -> None:
 
 #*******************************************poll_handler
 
-@form_router.poll()
-async def poll_handler(poll: types.Poll):
-    mess=str(f"id:{poll.id} anan:{poll.is_anonymous}")
-    requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={mess}')
- 
+
 # инициализируем словарь для хранения результатов викторины
 quiz_results = {}
 users=[]
 
-@form_router.poll_answer()
-async def poll_answer_handler(poll_answer: types.PollAnswer):
+@form_router.message()
+#async def poll_answer_handler(poll_answer: types.PollAnswer):
+async def handle_correct_answer(message: types.Message, state: FSMContext):
     # заполняем словарь ключами - порядковыми номерами пользователей
-    users.append(poll_answer.user)
+    users.append(message.poll_answer.user)
     for user in users:
         quiz_results[user.id] = 0
     # проверяем, что это правильный ответ на викторину
-    if poll_answer.option_ids == [0]:
+    if message.poll_answer.option_ids == [0]:
         # получаем порядковый номер пользователя
-        user_id = poll_answer.user.id
+        user_id = message.poll_answer.user.id
         # увеличиваем количество правильных ответов пользователя в словаре
         quiz_results[user_id] += 1
         # проверяем, достиг ли пользователь финишного номера
         if quiz_results[user_id] == 2:#FINISH_NUMBER:
             # отправляем поздравление пользователю
-            await bot.send_message(poll_answer.voter_chat,f"Поздравляем, {user_id}! Вы первый ответили правильно на все вопросы!")
+            await bot.send_message(message.poll_answer.voter_chat,f"Поздравляем, {user_id}! Вы первый ответили правильно на все вопросы!")
     else:
         # если ответ неправильный, просто игнорируем его
         pass
