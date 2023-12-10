@@ -22,7 +22,7 @@ from aiogram.filters import Command, Filter, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove,
- InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, PollAnswer)
+ InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, Poll, PollAnswer)
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
@@ -209,12 +209,18 @@ async def process_talk_bots(message: types.Message) -> None:
             reply_markup=ReplyKeyboardRemove())
 
 #*******************************************poll_handler
+
+@form_router.poll()
+async def poll_handler(poll: types.Poll):
+    mess=str(f"id:{poll.id} anan:{poll.is_anonymous}")
+    requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={mess}')
+ 
 # инициализируем словарь для хранения результатов викторины
 quiz_results = {}
 users=[]
 
 @form_router.poll_answer()
-async def poll_answer_handler(poll_answer: types.PollAnswer) -> Any:
+async def poll_answer_handler(poll_answer: types.PollAnswer):
     # заполняем словарь ключами - порядковыми номерами пользователей
     users.append(poll_answer.user)
     for user in users:
