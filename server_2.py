@@ -108,7 +108,7 @@ def main():
 
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=80)
+    run_app(app, host="0.0.0.0", port=8000)
 
 if __name__ == '__main__':
     main()
