@@ -60,7 +60,7 @@ promo="promo" + '-' + promokod
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
 if ngrok:
-    from pyngrok import ngrok
+   # from pyngrok import ngrok
 
     public_url = ngrok.connect(PORT).public_url
     # public_url = ngrok_tunnel.start()
