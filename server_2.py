@@ -7,7 +7,6 @@ import os
 from typing import Callable, Dict, Any, Awaitable, Union, List, Optional, BinaryIO
 from dotenv import load_dotenv
 from aiogram.types.update import Update
-from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 from aiohttp.web import run_app, static
 from aiohttp.web_app import Application
 from aiogram.fsm.storage.memory import MemoryStorage, StorageKey
