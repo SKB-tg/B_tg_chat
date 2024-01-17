@@ -32,7 +32,7 @@ from aiogram.methods import GetMyCommands
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, TgUser    
-from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
