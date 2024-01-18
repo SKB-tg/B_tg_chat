@@ -408,7 +408,7 @@ async def get_vakancy_handler(request: Request):
     print(payload1, data2)
     try:
 
-        res = requests.post(url2, headers=headers1, data=json.loads(data2))
+        res = requests.post(url2, headers=headers1, json=json.loads(data2))
         print(177, res.text)
         out_txt = eval(res.text)
     except requests.exceptions.HTTPError as HTTPError:
