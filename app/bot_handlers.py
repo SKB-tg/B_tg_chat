@@ -31,8 +31,8 @@ from aiogram.methods import GetMyCommands
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
-from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, TgUser    
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, TgUser
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
@@ -59,14 +59,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-# if ngrok:
-#    # from pyngrok import ngrok
+if ngrok:
+    from pyngrok import ngrok
 
-#     public_url = ngrok.connect(PORT).public_url
-#     # public_url = ngrok_tunnel.start()
-#     base_url= public_url # "https://b-tg-chat.onrender.com"
-# else:
-base_url = BASE_URL
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -153,7 +153,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         add_tg_user(_new_user)
         await save_newuser(message.from_user)
     await message.answer(
-        'Hello friend! Ты попал в приватный чат для общения и консультаций !\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n/help справочная информация',
+        'Hello friend! Ты попал в приватный чат для общения и консультаций !\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
          reply_markup=get_reply_keyboard1(),
     )
 
@@ -163,7 +163,7 @@ async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
     await message.answer(
-        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n/start{result[1].description},\n/promo: ввести промо код\n,/get_vakancy: Запрос новых вакансий\n,{result[4]}\n',
+        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n/promo: ввести промо код',
 
         reply_markup=get_reply_keyboard1(),
     )
@@ -408,7 +408,7 @@ async def get_vakancy_handler(request: Request):
     print(payload1, data2)
     try:
 
-        res = requests.post(url2, headers=headers1, json=json.loads(data2))
+        res = requests.post(url2, headers=headers1, data=json.loads(data2))
         print(177, res.text)
         out_txt = eval(res.text)
     except requests.exceptions.HTTPError as HTTPError:
