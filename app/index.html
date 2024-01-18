@@ -9,6 +9,8 @@
     <meta name="MobileOptimized" content="176"/>
     <meta name="HandheldFriendly" content="True"/>
     <meta name="robots" content="noindex,nofollow"/>
+    <link rel="stylesheet" id="main-style-css" href="/static/css/modals.css" type="text/css" media="all">
+
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
     <script>
         function setThemeClass() {
@@ -64,6 +66,8 @@
             padding: 16px 20px;
             text-transform: uppercase;
         }
+        .int-button-r { margin-left: 15px  }
+        .int-button-l { margin-right: 15px  }
 
         section {
             display: flex;
@@ -221,8 +225,8 @@
       <img class="LogoPic1" src="static/img/Robir-no-back.svg" width="250" height="230" alt="Логотип">
 
         </div>
-
-    <button id="main_btn" ><a href="https://t.me/help_develop_men/317">О встроенном в Telegram кошельке @wallet</a></button>
+<!-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="help_develop_men/317" data-width="100%" data-userpic="false" data-dark="1"></script>
+ -->    <button id="main_btn" ><a href="https://t.me/help_develop_men/317">О встроенном в Telegram кошельке @wallet</a></button>
 <!--             <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a>
             (opens outside webview)
         </li>
@@ -233,22 +237,195 @@
     </button>
     <button onclick="sendMessage('1003', el=this)">Вход по free-promo-1003</button>
 
-    <button onclick="sendMessage1(data1, el=this)">Отправка запроса на новые вакансии</button>
-    <pre><code id="webview_data"></code></pre>
-
-    <button onclick="toggleMainButton(this);">убрать кнопку</button>
-    <div id="btn_status" class="hint" style="display: none;">
+    <div class="grupp" style="display: flex;width: 100%; padding: 15px 0; ">
+    <button class="int-button-l vacs-btn" onclick="getVacancies();">Получить новые вакансии</button>
+        <button class="int-button-r js-btn-add-to-cart vacs-btn" onclick="" data-popup="popup-order">Настройка фильтра запроса</button>
     </div>
+    <pre style="display: flex; background-color: transparent; border: dashed;"><code id="vacancy_data"> </code>
+            <img id="vacancy_data_img" class='img' style="display: none;height: 26px;width: 26px;margin-left: 15px;" src="static/img/load-36_256.gif">
+        </pre>
+
+ <!--    <pre><code id="webview_data"></code></pre> -->
+
+<!--     <button onclick="toggleMainButton(this);">убрать кнопку</button>
+    <div id="btn_status" class="hint" >
+    </div> -->
    
+       <button id="btn_vacancy_chanal" onclick=""><a href="https://t.me/vacancies_by"> Описание вакансии подробно</a></button>
+    <div id="btn_status" class="hint" >
+    </div>
 </section>
+
 <div class="viewport_border"></div>
 <div class="viewport_stable_border"></div>
+
+<!-- popup-order -->
+<div class="popup popup-order js-popup-order">
+  <div class="popup__wrapper">
+    <div class="popup__inner">
+      <div class="popup__content">
+        <button class="btn-close popup__btn-close popup-close"></button>
+        <h2 class="page-title">Параметры запроса</h2>
+        <div class="cart js-cart-wrapper">
+          <form class="form form-send">
+    <div class="cart__items js-cart">
+
+           <div data-product-id="1" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">1</div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title">Категории</h3>
+                <select class="form__input" name="Категории" onclick="selectURL(this);" >
+                  <option data-sel="menedzher_po_prodazham" data-url="menedzher_po_prodazham" value="Менеджер по продажам" label="Менеджер по продажам"></option>
+                  <option data-sel="veb-dizajner" label="Web дизайнер" data-url="veb-dizajner" value="Web дизайнер" selected=""></option>
+                  <option data-sel="dizajner-v-otdel-marketinga" label="Дизайнером в отделе маркетинга" value="dizajner-v-otdel-marketinga" ></option>
+                  <option data-sel="dizajner-v-poligrafiyu" label="Дизайнером в полиграфии" value="Дизайнером в полиграфии" ></option>
+
+                </select>
+          </div>
+        </div>
+
+      </div>
+      </div>
+      <!-- **************************************************  -->
+            <div data-product-id="2" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">2
+          </div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title" >ID целевого канала или чата</h3>
+                <select class="form__input" name="Оплата" disabled="">
+                  <option  data-sel="" value="Чат с текущим ботом">Чат с текущим ботом</option>
+                  <option value="Канал о образовании">Канал о образовании</option>
+                  <option value="Канал Карикатурист на час">Канал "Карикатурист на час"</option>
+
+                </select>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- **************************************************  -->
+
+            <div data-product-id="3" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">3
+          </div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title">Url источника</h3>
+                <select id="url1" class="form__input" name="URL_vacancy">
+                  <option id="menedzher_po_prodazham" label="menedzher_po_prodazham" value="https://rabota.by/vacancies/menedzher_po_prodazham" ></option>
+                  <option id="veb-dizajner" label="veb-dizajner" value="https://rabota.by/vacancies/veb-dizajner" selected=""></option>
+                  <option id="dizajner-v-otdel-marketinga" label="dizajner-v-otdel-marketinga" value="https://rabota.by/vacancies/dizajner-v-otdel-marketinga"></option>
+                  <option id="dizajner-v-poligrafiyu" label="dizajner-v-poligrafiyu" value="https://rabota.by/vacancies/dizajner-v-poligrafiyu"></option>
+                </select>
+<!--             <div class="form__input" name="Оплата">
+           <input type="hidden" name="Изделие" value="Количество запршенных вакансий">
+         <input class="js-cart-input-quantity form__input" minlength=10 type="text" name="URL_vacancy" value="https://rabota.by/vacancies/menedzher_po_prodazham">
+                </div> -->
+          </div>
+        </div>
+
+      </div>
+      </div>
+      <!-- **************************************************  -->
+
+            <div data-product-id="4" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">4
+          </div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title">Количество запрашиваемых вакансий</h3>
+<!--             <input type="hidden" name="quantity_get_vacancy" value="3">
+ -->            <input class="js-cart-input-quantity" type="hidden" name="quantity_get_vacancy" value="3">
+          </div>
+        </div>
+        <div class="cart-item__end">
+          <div class="cart-item__actions">
+            <button class="cart-item__btn js-btn-product-decrease-quantity" type="button">-</button>
+            <span class="cart-item__quantity js-cart-item-quantity">3</span>
+            <button class="cart-item__btn js-btn-product-increase-quantity" type="button">+</button>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- **************************************************  -->
+            <div data-product-id="5" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">5
+          </div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title">Количество сканируемых страниц</h3>
+<!--             <input type="hidden" name="Изделие" value="number_of_pages">
+ -->            <input class="js-cart-input-quantity" type="hidden" name="Количество" value="1">
+          </div>
+        </div>
+        <div class="cart-item__end">
+          <div class="cart-item__actions">
+            <button class="cart-item__btn js-btn-product-decrease-quantity" type="button">-</button>
+            <span class="cart-item__quantity js-cart-item-quantity">1</span>
+            <button class="cart-item__btn js-btn-product-increase-quantity" type="button">+</button>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- **************************************************  -->
+            <div data-product-id="6" class="js-cart-item">
+      <div class="cart-item cart__item">
+        <div class="cart-item__main">
+          <div class="cart-item__start">6
+          </div>
+ 
+          <div class="cart-item__content">
+            <h3 class="cart-item__title">Глубина запроса по дате</h3>
+<!--             <input type="hidden" name="Изделие" value="days_ago">
+ -->            <input class="js-cart-input-quantity" type="hidden" name="Количество" value="1">
+          </div>
+        </div>
+        <div class="cart-item__end">
+          <div class="cart-item__actions">
+            <button class="cart-item__btn js-btn-product-decrease-quantity" type="button">-</button>
+            <span class="cart-item__quantity js-cart-item-quantity">1</span>
+            <button class="cart-item__btn js-btn-product-increase-quantity" type="button">+</button>
+          </div>
+        </div>
+      </div>
+      </div>
+     <button class="btn form__btn js-popup-order-close" type="submit">Сохранить</button>
+
+  </div>
+
+<!--             <div class="cart__totals">
+              <div>Итого: <span class="cart__bold"><span class="js-cart-total-price">0</span> ₽</span></div>
+            </div> -->
+
+    </form>
+<!--           <div class="cart__empty">
+            <p class="cart__info">Нет товаров</p>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.popup-order -->
+
 <script src="https://webappcontent.telegram.org/js/jquery.min.js"></script>
 <script>
     ///Telegram.WebApp.ready();
 
     var initData = Telegram.WebApp.initData || '';
     var initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
+
 
     function sendMessage(msg_id, with_webview, el=null) {
         if (!initDataUnsafe.query_id) {
@@ -289,6 +466,8 @@
         });
     }
 
+    function getVacancies() {const data_setVacancy_last = localStorage.getItem('settingsVacancy');
+     getVacancyPlusSettings(data_setVacancy_last);}
     function webviewExpand() {
         Telegram.WebApp.expand();
     }
@@ -339,14 +518,16 @@
     Telegram.WebApp.onEvent('themeChanged', function () {
         $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
     });
-
+    var vacancy_data = "Свежие вакансии:      ....."
     $('#main_btn').toggle(!!initDataUnsafe.query_id);
     $('#with_webview_btn').toggle(!!initDataUnsafe.query_id && !initDataUnsafe.receiver);
     // $('#data_btn').toggle(!initDataUnsafe.query_id || !initDataUnsafe.receiver);
+    $('#vacancy_data').html(vacancy_data);
     $('#webview_data').html(JSON.stringify(initDataUnsafe, null, 2));
     $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
     $('#regular_link').attr('href', $('#regular_link').attr('href') + location.hash);
     $('#text_field').focus();
+    $('#btn_vacancy_chanal').toggle()
     if (initDataUnsafe.query_id && initData) {
         $('#webview_data_status').show();
         $.ajax('/checkData', {
@@ -372,6 +553,11 @@
         .onClick(function () {
             webviewClose();
         });
+    function closeMainButton() {
+    Telegram.WebApp.MainButton
+        .hide()
+        .setText('')
+    }
 
     function toggleMainButton(el) {
         var mainButton = Telegram.WebApp.MainButton;
@@ -396,9 +582,9 @@
 
     Telegram.WebApp.onEvent('viewportChanged', setViewportData);
     setViewportData();
-
-
 </script>
+<script type="text/javascript" src="/static/js/main.js"></script>
+
 </body>
 </html>
 <!-- page generated in 1.11ms -->
