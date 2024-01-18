@@ -106,7 +106,7 @@ def main():
     app.router.add_post("/get_vakancy", get_vakancy_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/ext_message", ext_send_message_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/checkData", check_data_handler)
-    app.router.add_static("/static", Path("./static"))
+    app.router.add_static("/static", Path("./app/static"))
 
     setup_application(app, dp, bot=bot)
 
