@@ -32,11 +32,12 @@ from aiogram.methods import GetMyCommands
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, TgUser
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
 
+builder = InlineKeyboardBuilder()
 
 #************************************
 
@@ -59,14 +60,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-# if ngrok:
-#     from pyngrok import ngrok
+if ngrok:
+    from pyngrok import ngrok
 
-#     public_url = ngrok.connect(PORT).public_url
-#     # public_url = ngrok_tunnel.start()
-#     base_url= public_url # "https://b-tg-chat.onrender.com"
-# else:
-base_url = BASE_URL
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -163,7 +164,7 @@ async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
     await message.answer(
-        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n/promo: ввести промо код',
+        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n\n_--_',
 
         reply_markup=get_reply_keyboard1(),
     )
@@ -237,7 +238,7 @@ async def tube_handler(message: types.Message, state: FSMContext) -> None:
 
     if message.text.startswith("https://youtu") == False:
 
-        await message.answer("Привет Youtube!\nТак назывыется новый функционал, позволяющий 'по кнопке'\nпосмотреть или послушать желаемое видео\nс Youtube, без назойливой рекламы...n(3 клавиши - 3 режима.)\n\n->>> Просто пришли ссылку на видео в виде текстового сообщения <<<- ->>> далее следуй по инструкции <<<-",
+        await message.answer("Привет Youtube!\nТак назывыется новый функционал, позволяющий 'по кнопке'\nпосмотреть или послушать желаемое видео\nс Youtube, без назойливой рекламы...(3 клавиши - 3 режима.)\n\n->>> Просто вставь ссылку на видео в поле текстового сообщения <<<- ->>> далее следуй по инструкции <<<-",
          reply_markup=get_reply_keyboard1())
         return
     #await message.answer("Видео без рекламы", reply_markup=ReplyKeyboardRemove())
@@ -250,7 +251,7 @@ async def tube_handler(message: types.Message, state: FSMContext) -> None:
     await message.answer(
     "Привет Youtube!\n720dpi - для настольных ПК\n360dpi - для мобильных\nАудио - для гурманов\n->>>Выбирай, жми и ожидай<<<- ",
     #reply_markup=get_inline_keyboard_creat(t1="360dpi",  delet=1))
-    reply_markup=get_inline_keyboard_creat(t1="Video+Audo 720dpi", t2="Video+Audo 360dpi", t3="Only Audio" , t4="Свернуть", delet=2))
+    reply_markup=get_inline_keyboard_creat(t1="Video+Audo 720dpi", t2="Video+Audo 360dpi", t3="Only Audio" , t4="Далее", delet=2))
 
 
 @form_router.message(F.chat.func(lambda chat: chat.type == 'private') & ~F.text.startswith("https://youtu"))
@@ -258,7 +259,9 @@ async def process_write_menu2_bots(message: types.Message, state: FSMContext) ->
 
     user_name = message.from_user.username
     first_name = message.from_user.first_name
-    print(121, message.text)
+    if message.text == None:
+        print(121, message)
+        return
     # if tg_user_is_db(user_name) != False:
     #     await save_newuser(message.from_user)
     _is_donat=get_tguser(user_name).is_donate
@@ -409,13 +412,13 @@ async def get_vakancy_handler(request: Request):
     try:
 
         res = requests.post(url2, headers=headers1, json=json.loads(data2))
-        print(177, res.text)
+        print(412, res.json)
         res_j = json.dumps(res.json())
         out_txt = eval(res_j)
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
-    print(375, 177, res.text)
+    #print(375, 177, res.text)
     payload2 = {
         'ID вакансии': out_txt['id_vakancy'],
         'категории': out_txt['kategory'],
@@ -526,10 +529,10 @@ async def run_repost_plus(callback: CallbackQuery):
             print(208, htm[2], htm[3])
             return
         video = types.FSInputFile(htm[0])
-        await bot.send_video(chat_id, video, caption="Видео без рекламы",
+        mess = await bot.send_video(chat_id, video, caption="Видео без рекламы",
          reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
         os.remove(htm[0])
-
+        #print(533, mess)
     else:
         print(528, callback.message.chat.id, callback.message.message_id-1)
         await bot.delete_message(callback.message.chat.id, callback.message.message_id-3 )
@@ -538,6 +541,13 @@ async def run_repost_plus(callback: CallbackQuery):
         await bot.delete_message(callback.message.chat.id, callback.message.message_id )
 
         await callback.message.answer(
-        "Вы можете также задать вопрос или изучите мои возможности\n\n/help",#"Привет Youtube!\nПросто пришли ссылку на видео в виде текстового сообщения.",
+        "Вы можете также задать вопрос или изучите мои возможности\n\n/help\n\n Кстати уважаемые пользователи иногда скидывают полезную информацию",#"Привет Youtube!\nПросто пришли ссылку на видео в виде текстового сообщения.",
         #reply_markup=get_inline_keyboard_creat(t1="360dpi",  delet=1))
         reply_markup=get_reply_keyboard1())
+        time.sleep(15)
+        builder.add(types.InlineKeyboardButton(
+            text="🔥-- Погнали --🔥",
+            url="https://t.me/notcoin_bot?start=rp_9938433")
+            )
+        await bot.send_video(chat_id, video='BAACAgIAAxkBAAIHZWWqLQvHaT8sxAqwFy6VjUzn4YuCAAL_PgACRphRSc3X5bCE-d64NAQ', width=480, caption="Информация для любителей поиграть.\n\nСуть: накапливать монеты Notcoin, используя простые действия - клики по экрану мобилы.Короче попробуй сам....\n (от меня бонус - 25000 монет, кстати монеты набирают популярность!)",
+         reply_markup=builder.as_markup())
