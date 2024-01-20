@@ -71,18 +71,19 @@ class MyUniTuber:
 		stream_url = yt.streams.get_by_itag(18) if dpi == 360 else yt.streams.get_by_itag(22)
 		if dpi == 0:
 			stream_url = yt.streams.get_by_itag(140)
+		thumbnail_url = yt.thumbnail_url
 		bot = Bot(token=self.bot_token)
 		if u == 1:
-			return [0, 0, stream_url, yt]
+			return [0, 0, stream_url, thumbnail_url]
 # 		#dp = Dispatcher(bot)
 		output_path = str(Path.cwd()) + "\\out"
 		if self.filename != None: #os.path.isfile(os.path.join(output_path, self.filename)):
-			return [output_path, self.filename]
+			return [output_path, self.filename, "", thumbnail_url]
 		video_file = stream_url.download(output_path=output_path, filename=self.filename )
 		#with open(video_file, 'rb') as f:
 		# video = types.FSInputFile(output_path, "NOTCOIN.mp4")
 		# await bot.send_video(self.chat_id, video)
-		return [video_file, yt.title + ".mp4"]
+		return [video_file, yt.title + ".mp4", "",thumbnail_url]
 
 # 		try:
 

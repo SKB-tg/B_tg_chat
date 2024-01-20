@@ -27,12 +27,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove,
  InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, Poll, PollAnswer, BufferedInputFile, FSInputFile, URLInputFile)
-from aiogram.methods import GetMyCommands
+from aiogram.methods import GetMyCommands, DeleteMessage
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
-from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, TgUser
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
@@ -60,7 +60,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -148,7 +155,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         await save_newuser(message.from_user)
     await message.answer(
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
-         reply_markup=get_reply_keyboard1(),
+         reply_markup=ReplyKeyboardRemove(),
     )
 
 
@@ -158,6 +165,7 @@ async def command_help(message: Message, state: FSMContext) -> None:
     result = await bot(GetMyCommands())
     await message.answer(
         f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n\n_--_',
+
         reply_markup=get_reply_keyboard1(),
     )
 
@@ -176,7 +184,7 @@ async def command_promo(message: Message, state: FSMContext) -> None:
     await message.answer(
         "Добро пожаловать, у вас полный доступ к действующему функционалу\nЗадавайте вопросы, делитесь мнениями...",
 
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=get_reply_keyboard1(),
     )
 
 @form_router.message(Command(commands=["donate"]))
@@ -187,7 +195,7 @@ async def command_donate(message: Message, state: FSMContext) -> None:
     await message.answer(
         "Приветствем вас, ждите перевода на страницу оплаты...",
 
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=get_reply_keyboard1(),
     )
 
 @form_router.message(Command(commands=["get_vakancy"]))
@@ -225,7 +233,13 @@ async def command_get_vakancy(message: Message, state: FSMContext) -> None:
 #@form_router.message(F.text.startswith("https://www.youtu"))
 @form_router.message((F.chat.func(lambda chat: chat.type == 'private') & (F.text == "🔥 Бонусные-возможности")) | (F.chat.func(lambda chat: chat.type == 'private') & (F.text.startswith("https://youtu"))))
 async def tube_handler(message: types.Message, state: FSMContext) -> None:
-
+    _is_donat=get_tguser(message.from_user.username).is_donate
+    is_donat=get_tguser(message.from_user.username).is_donate
+    if ((str(message.text).find('/promo') != -1) or (_is_donat == False)) :
+        await message.answer(
+            "Неправильно набрана команда, повторите!\n или введите полученный промокод",
+            reply_markup=get_reply_keyboard1())
+        return
 # 'https://www.youtube.com/watch?v=UM9OK9vFfRM'
 
     if message.text.startswith("https://youtu") == False:
@@ -238,6 +252,9 @@ async def tube_handler(message: types.Message, state: FSMContext) -> None:
     cb360.url = url 
     cb720.url = url
     audio.url = url
+    if message.video:
+        await bot.delete_message(message.chat.id, message.message_id )
+        await bot.send_message(message.chat.id, url)
 
     print(248, cb360.url)
     await message.answer(
@@ -259,7 +276,7 @@ async def process_write_menu2_bots(message: types.Message, state: FSMContext) ->
     _is_donat=get_tguser(user_name).is_donate
     if ((str(message.text).find('/promo') != -1) or (_is_donat == False)) :
         await message.answer(
-            "Неправильно набрана команда, повторите!",
+            "Неправильно набрана команда, повторите!\n или введите полученный промокод",
             reply_markup=ReplyKeyboardRemove())
         return
     else:
@@ -365,10 +382,10 @@ async def get_vakancy_handler(request: Request):
         web_app_init_data = safe_parse_webapp_init_data(token=bot1.token, init_data=data["_auth"])
     except ValueError:
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
-    print(data["msg_id"])
-    kod = str_for_dict(data["msg_id"]) #parse_webapp_init_data(init_data=data["_auth"],  loads=[data["msg_id"]])
+    print(382, data["msg_id"])
+    kot = str_for_dict(data["msg_id"]) #parse_webapp_init_data(init_data=data["_auth"],  loads=[data["msg_id"]])
 
-    print(kod)
+    print(kot)
 
     #return json_response({"ok": True, "data": kod})
     # {"category":"Менеджер по продажам","URL_vacancy":"https://rabota.by/vacancies/menedzher_po_prodazham",
@@ -391,12 +408,12 @@ async def get_vakancy_handler(request: Request):
     }
     
     payload1 = {
-    "kategory": kod['category'],#"Менеджер по продажам",
-    "url": kod['URL_vacancy'],#'https://rabota.by/vacancies/menedzher_po_prodazham',
-    "page": int(kod['number_of_pages']),
-    "fd": int(kod['days_ago']),
-    "max_count_vacancy": int(kod['quantity_get_vacancy']),#1,
-    "chat_id": int(kod['ID_chat']),#5146071572,
+    "kategory": kot['category'],#"Менеджер по продажам",
+    "url": kot['URL_vacancy'],#'https://rabota.by/vacancies/menedzher_po_prodazham',
+    "page": int(kot['number_of_pages']),
+    "fd": int(kot['days_ago']),
+    "max_count_vacancy": int(kot['quantity_get_vacancy']),#1,
+    "chat_id": int(kot['ID_chat']),#5146071572,
     "bot_token": "6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM"
     }
     data2 = json.dumps(payload1)
@@ -497,7 +514,8 @@ async def send_value2(callback: CallbackQuery):
 @cal_router.callback_query(F.data.startswith("video:")) #Text(startswith="video_"))
 async def run_repost_plus(callback: CallbackQuery):
     bot_token = '6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM'
-    chat_id = 5146071572
+    chat_id = callback.message.chat.id
+    message_id = callback.message.message_id
     sufix_full=callback.data.split(":") or ['', '', '']
     print(501, sufix_full[1])
     print(485, cb360.url, cb360.u)
@@ -511,26 +529,31 @@ async def run_repost_plus(callback: CallbackQuery):
         if sufix_full[1] == "720dpi":
             dpi = 720 
             url = cb720.url
-        await callback.answer(text=f"Спасибо, что воспользовались ботом!\nОн в процессе закачки...\nVideo: {url} ",
+        await callback.answer(text=f"_--_\n\nСпасибо, что воспользовались ботом!\nОн в процессе закачки...\nVideo: {url} ",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
         copyTube = MyUniTuber(chat_id=chat_id, bot_token=bot_token)#filename='NOTCOIN.mp4')
         htm= await copyTube.get_Tube(url, dpi=dpi, u=cb360.u)
+        thumbnail = types.URLInputFile(htm[3])
         if cb360.u == 1:
-            await bot.send_video(chat_id, htm[2],
-             reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
+            await bot.send_video(chat_id, htm[2], thumbnail=thumbnail,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
             print(208, htm[2], htm[3])
             return
         video = types.FSInputFile(htm[0])
-        mess = await bot.send_video(chat_id, video, caption="Видео без рекламы",
-         reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
+        await bot.delete_message(chat_id, message_id-2 )
+        await bot.delete_message(chat_id, message_id-1 )
+        await bot.delete_message(chat_id, message_id )
+        mess = await bot.send_video(chat_id, video, thumbnail=thumbnail, caption="Видео без рекламы",
+        reply_markup=get_inline_keyboard_creat(t1="Video+Audo 720dpi", t2="Video+Audo 360dpi", t3="Only Audio" , t4="Далее", delet=2))
         os.remove(htm[0])
+
         #print(533, mess)
     else:
         print(528, callback.message.chat.id, callback.message.message_id-1)
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id-3 )
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id-2 )
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id-1 )
-        await bot.delete_message(callback.message.chat.id, callback.message.message_id )
+        await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id,  reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id-2 )
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id-1 )
+        # await bot.delete_message(callback.message.chat.id, callback.message.message_id )
 
         await callback.message.answer(
         "Вы можете также задать вопрос или изучите мои возможности\n\n/help\n\n Кстати уважаемые пользователи иногда скидывают полезную информацию",#"Привет Youtube!\nПросто пришли ссылку на видео в виде текстового сообщения.",

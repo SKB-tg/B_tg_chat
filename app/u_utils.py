@@ -14,6 +14,26 @@ from urllib.parse import parse_qs, parse_qsl
 # async def empty_receive() -> typing.NoReturn:
 #     raise RuntimeError("Receive channel has not been made available")
 
+#***************************************************
+#----------------field_serializerВы также можете использовать :
+
+import re
+from pydantic import BaseModel, field_serializer
+
+class MyModel(BaseModel):
+    p: dict
+
+    @field_serializer('p')
+    def serialize_dict(values):
+        for key, value in values.items():
+            if isinstance(value, re.Pattern):
+                values[key] = value.pattern
+        return values
+
+a = MyModel(p={"pattern": re.compile("asd")})
+
+print(a.model_dump_json())
+#***************************************************
 
 # async def empty_send(message: Message) -> typing.NoReturn:
 #     raise RuntimeError("Send channel has not been made available")

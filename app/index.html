@@ -11,7 +11,7 @@
     <meta name="robots" content="noindex,nofollow"/>
     <link rel="stylesheet" id="main-style-css" href="/static/css/modals.css" type="text/css" media="all">
 
-    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         function setThemeClass() {
             document.documentElement.className = Telegram.WebApp.colorScheme;
@@ -241,12 +241,12 @@
     <button class="int-button-l vacs-btn" onclick="getVacancies();">Получить новые вакансии</button>
         <button class="int-button-r js-btn-add-to-cart vacs-btn" onclick="" data-popup="popup-order">Настройка фильтра запроса</button>
     </div>
-    <pre style="display: flex; background-color: transparent; border: dashed;"><code id="vacancy_data"> </code>
+    <pre style="display: flex; background-color: transparent; border: dashed; color: #ffff"><code id="vacancy_data"> </code>
             <img id="vacancy_data_img" class='img' style="display: none;height: 26px;width: 26px;margin-left: 15px;" src="static/img/load-36_256.gif">
         </pre>
 
- <!--    <pre><code id="webview_data"></code></pre> -->
-
+<!--     <pre><code id="webview_data"></code></pre>
+ -->
 <!--     <button onclick="toggleMainButton(this);">убрать кнопку</button>
     <div id="btn_status" class="hint" >
     </div> -->
@@ -277,7 +277,7 @@
  
           <div class="cart-item__content">
             <h3 class="cart-item__title">Категории</h3>
-                <select class="form__input" name="Категории" onclick="selectURL(this);" >
+                <select class="form__input" name="Категории" oninput="selectURL(this);" >
                   <option data-sel="menedzher_po_prodazham" data-url="menedzher_po_prodazham" value="Менеджер по продажам" label="Менеджер по продажам"></option>
                   <option data-sel="veb-dizajner" label="Web дизайнер" data-url="veb-dizajner" value="Web дизайнер" selected=""></option>
                   <option data-sel="dizajner-v-otdel-marketinga" label="Дизайнером в отделе маркетинга" value="dizajner-v-otdel-marketinga" ></option>
@@ -421,7 +421,7 @@
 
 <script src="https://webappcontent.telegram.org/js/jquery.min.js"></script>
 <script>
-    ///Telegram.WebApp.ready();
+    Telegram.WebApp.ready();
 
     var initData = Telegram.WebApp.initData || '';
     var initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
@@ -466,8 +466,11 @@
         });
     }
 
-    function getVacancies() {const data_setVacancy_last = localStorage.getItem('settingsVacancy');
-     getVacancyPlusSettings(data_setVacancy_last);}
+    function getVacancies() { 
+        if ($('#vacancy_data_img').css("display") == 'block') { alert('Не жми так часто, дождись ответа!'); return;}
+        else {
+        const data_setVacancy_last = localStorage.getItem('settingsVacancy');
+     getVacancyPlusSettings(data_setVacancy_last);}}
     function webviewExpand() {
         Telegram.WebApp.expand();
     }
@@ -523,7 +526,7 @@
     $('#with_webview_btn').toggle(!!initDataUnsafe.query_id && !initDataUnsafe.receiver);
     // $('#data_btn').toggle(!initDataUnsafe.query_id || !initDataUnsafe.receiver);
     $('#vacancy_data').html(vacancy_data);
-    $('#webview_data').html(JSON.stringify(initDataUnsafe, null, 2));
+    //$('#webview_data').html(JSON.stringify(initDataUnsafe, null, 2));
     $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
     $('#regular_link').attr('href', $('#regular_link').attr('href') + location.hash);
     $('#text_field').focus();
@@ -577,7 +580,7 @@
 
     function setViewportData() {
         $('.viewport_border').attr('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportHeight, 2));
-        $('.viewport_stable_border').attr('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportStableHeight, 2) + ' | is_expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false'));
+         $('.viewport_stable_border').attr('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportStableHeight, 2) + ' | is_expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false'));
     }
 
     Telegram.WebApp.onEvent('viewportChanged', setViewportData);

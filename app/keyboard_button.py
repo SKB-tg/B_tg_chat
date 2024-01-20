@@ -56,7 +56,7 @@ def get_inline_keyboard_creat(t1: str="Далее", t2: str="Далее", t3: st
             ]
     if delet == 1:
             buttons =[
-            [but(1)],
+            [but(t1, call_data)],
             ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard

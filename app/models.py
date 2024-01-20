@@ -8,7 +8,7 @@ import app.db as db
 
 
 class TgUser(BaseModel):
-	"""docstring for TgUser"""
+	"""class TgUser"""
 	id: int = 1
 	codename: str = ""
 	id_chat: int = 0
@@ -83,7 +83,7 @@ def get_user() -> List[Dict]:
   """Возвращает справочник категорий."""
   return _categories
 
-def get_tguser( username: str) -> Union[bool, Any]:
+def get_tguser( username: str) -> Union[bool, TgUser]:
 	_users = load_users()
 	for user in _users:
 		if user['codename'] == username:
