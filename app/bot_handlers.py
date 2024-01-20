@@ -133,8 +133,6 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     {"command": "settings", "description": "настройки бота"},
     ]
     await bot.set_my_commands(_commands1)
-    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    res = await requests.get(_url) 
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
@@ -152,6 +150,9 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
          reply_markup=ReplyKeyboardRemove(),
     )
+    #Заранее разбудим ресурс по вакансиям
+    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    res = requests.get(_url)
 
 
 @form_router.message(Command(commands=["help"]))
