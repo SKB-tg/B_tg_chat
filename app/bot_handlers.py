@@ -133,6 +133,8 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     {"command": "settings", "description": "настройки бота"},
     ]
     await bot.set_my_commands(_commands1)
+    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    res = await requests.get(_url) 
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
