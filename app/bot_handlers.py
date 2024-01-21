@@ -11,7 +11,7 @@ import logging
 import os
 from typing import Any, Dict
 from dotenv import load_dotenv
-
+import random
 #import aiohttp
 from aiohttp.web import run_app
 from aiohttp.web_app import Application
@@ -32,10 +32,11 @@ from aiogram.methods import GetMyCommands, DeleteMessage
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
+from app.u_utils import str_for_dict, get_cmozi
 
 builder = InlineKeyboardBuilder()
 
@@ -60,7 +61,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -131,8 +139,14 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     {"command": "promo", "description": "ввести промо код"},
     {"command": "get_vakancy", "description": "Запрос новых вакансий"},
     {"command": "settings", "description": "настройки бота"},
+    {"command": "get_admin", "description": "Написать админу"},
+
     ]
     await bot.set_my_commands(_commands1)
+    #Заранее разбудим ресурс по вакансиям
+    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    res = requests.get(_url)
+
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
@@ -160,10 +174,39 @@ async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
     await message.answer(
-        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n/start - перезапуск.\n/help{result[0]},\n\n_--_',
+        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n\n/start - перезапуск.\n\n/get_admin - Написать админу\n\n/help - команды - пояснения,\n\n_--_',
 
         reply_markup=get_reply_keyboard1(),
     )
+nomAdmin = MyCallback()
+
+@form_router.message(Command(commands=["get_admin"]))
+async def command_admin(message: Message, state: FSMContext) -> None:
+    #await state.set_state(Form.name)
+    nomAdmin.u = random.randint(10000, 100000)
+    #nomAdmin.u = nom
+
+    await message.answer(
+        f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
+        reply_markup=get_reply_keyboard1(),
+    )
+
+@form_router.message(F.text.startswith(str(nomAdmin.u)))
+async def message_admin(message: Message, state: FSMContext) -> None:
+    #await state.set_state(Form.name)
+    text = message.text[5:]
+    bot5822305353 = Bot("5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M")
+    #requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={new_user_str}')
+    await bot5822305353.send_message(message.chat.id, text=text)
+    bot.send_message()
+    if F.text.startswith(str(nomAdmin.u)) == True:
+        print(199, message.text)
+    await message.answer(
+        f'Вам скоро ответят! Спасибо что вы с нами!\n\n_--_',
+
+        reply_markup=get_reply_keyboard1(),
+    )
+
 
 @form_router.message(Command(commands=[promo]))
 async def command_promo(message: Message, state: FSMContext) -> None:
@@ -178,7 +221,7 @@ async def command_promo(message: Message, state: FSMContext) -> None:
     is_donate = True
     update_coloms_user(id_db, [{"is_donate": True},])
     await message.answer(
-        "Добро пожаловать, у вас полный доступ к действующему функционалу\nЗадавайте вопросы, делитесь мнениями...",
+        "Добро пожаловать, у вас полный доступ к действующему функционалу\nЗадавайте вопросы, делитесь мнениями...\n\nДалее обращай внимание на кнопки 😁",
 
         reply_markup=get_reply_keyboard1(),
     )
@@ -339,8 +382,6 @@ from aiogram.types import (
     InputTextMessageContent,
     WebAppInfo,
 )
-from app.u_utils import str_for_dict
-
 
 
 async def ext_send_message_handler(request: Request):
