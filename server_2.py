@@ -7,6 +7,7 @@ import os
 from typing import Callable, Dict, Any, Awaitable, Union, List, Optional, BinaryIO
 from dotenv import load_dotenv
 from aiogram.types.update import Update
+from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 from aiohttp.web import run_app, static
 from aiohttp.web_app import Application
 from aiogram.fsm.storage.memory import MemoryStorage, StorageKey
@@ -16,14 +17,15 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiohttp.web_fileresponse import FileResponse
 from aiohttp.web_request import Request
 from aiogram import BaseMiddleware
-from aiogram.utils.chat_action import ChatActionMiddleware
+from aiogram.utils.chat_action import ChatActionMiddleware, ChatActionSender
+from aiogram.dispatcher.flags import get_flag
 
 from aiogram import Bot, Dispatcher#, types, F, Router, html # executor,
 from async_timeout import timeout
 import requests
 from app.bot_handlers import (bot, form_router, base_url, ext_send_message_handler,
     check_data_handler, get_vakancy_handler, cal_router)
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 PORT = os.getenv("PORT")
 
@@ -84,7 +86,7 @@ def main():
     #requests.get('https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id='+str(5146071572)+'&text=start.')
     dp.include_routers(cal_router, form_router, p_router)
     dp.update.outer_middleware(SomeMiddleware())
-    dp.message.middleware(ChatActionMiddleware())
+    #dp.message.middleware(ChatActionMiddleware())
     #dp.callback_query.middleware(CallbackAnswerMiddleware(pre=True, show_alert=True))
 
     app = Application()
@@ -106,11 +108,11 @@ def main():
     app.router.add_post("/get_vakancy", get_vakancy_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/ext_message", ext_send_message_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/checkData", check_data_handler)
-    app.router.add_static("/static", Path("./app/static"))
+    app.router.add_static("/static", Path("./static"))
 
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=80)
+    run_app(app, host="127.0.0.1", port=PORT)
 
 if __name__ == '__main__':
     main()
