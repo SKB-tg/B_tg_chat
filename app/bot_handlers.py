@@ -124,7 +124,7 @@ async def save_newuser(user):
  #*******************************************
 
 #@form_router.message(F.text.casefold() == "чатбот")
-@form_router.message(Command(commands=["start"]))
+@form_router.message(Command("start"))
 async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=base_url) -> None:
     #await state.set_state(Form.name)
     await bot.set_chat_menu_button(
