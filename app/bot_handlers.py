@@ -136,7 +136,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     _commands1 = [
     {"command": "help", "description": "помощь"},
     {"command": "start", "description": "рестарт"},
-    {"command": "INFO", "description": "справочная информация"},
+    {"command": "info_gid", "description": "справочная информация"},
     {"command": "promo", "description": "ввести промо код"},
     #{"command": "get_vakancy", "description": "Запрос новых вакансий"},
     {"command": "settings", "description": "настройки бота"},
@@ -210,7 +210,7 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     # if message.text.startswith(str(nomAdmin.u)) == True:
     print(199)
     await message.answer(
-        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /INFO\n\n\\_\\-\\-\\_',
+        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /info_gid\n\n\\_\\-\\-\\_',
          parse_mode="MarkdownV2",# entities=entities,
 
         reply_markup=get_reply_keyboard1(),
