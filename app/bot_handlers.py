@@ -136,6 +136,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     _commands1 = [
     {"command": "help", "description": "помощь"},
     {"command": "start", "description": "рестарт"},
+    {"command": "INFO", "description": "справочная информация"},
     {"command": "promo", "description": "ввести промо код"},
     {"command": "get_vakancy", "description": "Запрос новых вакансий"},
     {"command": "settings", "description": "настройки бота"},
@@ -169,7 +170,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     # res = requests.get(_url)
 
 
-@form_router.message(Command(commands=["help"]))
+@form_router.message(Command("help", "INFO))
 async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
