@@ -79,9 +79,9 @@ def load_users() -> List[TgUser]:
   )
   return _users
 
-def get_user() -> List[Dict]:
-  """Возвращает справочник категорий."""
-  return _categories
+# def get_user() -> List[Dict]:
+#   """Возвращает справочник категорий."""
+#   return _categories
 
 def get_tguser( username: str) -> Union[bool, TgUser]:
 	_users = load_users()

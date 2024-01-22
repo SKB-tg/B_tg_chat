@@ -27,6 +27,7 @@ cb720 = MyCallback(foo="720dpi")
 cb360 = MyCallback(foo="360dpi")
 audio = MyCallback(foo="Audio")
 Continue = MyCallback(foo="continue")
+
 print(29, cb360.pack())
 
 

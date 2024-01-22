@@ -21,22 +21,22 @@ from aiohttp.web_request import Request
 
 from aiogram import Bot, Dispatcher, types, F, Router, html # executor,
 #from aiogram.utils.executor import start_polling, start_webhook
-from aiogram.filters import Command, Filter, StateFilter
+from aiogram.filters import Command, Filter, StateFilter, BaseFilter
 #from aiogram.filters.state import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove,
+from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
  InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, Poll, PollAnswer, BufferedInputFile, FSInputFile, URLInputFile)
 from aiogram.methods import GetMyCommands, DeleteMessage
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
-from app.u_utils import str_for_dict
+from app.u_utils import str_for_dict, get_cmozi
 
 builder = InlineKeyboardBuilder()
 
@@ -61,7 +61,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -70,7 +77,14 @@ form_router = Router()
 #dp = Dispatcher()
 #form_router.message.middleware(AccessMiddleware(ACCESS_ID))
 #dp.middleware.setup(AccessMiddleware(ACCESS_ID))
+class GetAdminFilter(BaseFilter):
+    async def __call__(self, message: Message) -> bool:
+        if message.text.startswith(str(nomAdmin.u)) == True:
+            return True
+        return False
 
+
+#****************************************************
 class Form(StatesGroup):
     menu = State()
     submenu = State()
@@ -137,8 +151,8 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     ]
     await bot.set_my_commands(_commands1)
     #Заранее разбудим ресурс по вакансиям
-    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    res = requests.get(_url)
+    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    # res = requests.get(_url)
 
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
@@ -155,11 +169,11 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         await save_newuser(message.from_user)
     await message.answer(
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
-         reply_markup=ReplyKeyboardRemove(),
+         reply_markup=InlineKeyboardMarkup(inline_keyboard=[]),
     )
     #Заранее разбудим ресурс по вакансиям
-    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    res = requests.get(_url)
+    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    # res = requests.get(_url)
 
 
 @form_router.message(Command(commands=["help"]))
@@ -184,18 +198,26 @@ async def command_admin(message: Message, state: FSMContext) -> None:
         reply_markup=get_reply_keyboard1(),
     )
 
-@form_router.message(F.text.startswith(str(nomAdmin.u)))
+from aiogram.utils.markdown import hide_link
+
+@form_router.message(GetAdminFilter())
 async def message_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
+    entities = [MessageEntity(type='bot_command', offset=4, length=4, url='/help@avtoposter_ro_bot')]
+            # builder.add(types.InlineKeyboardButton(
+            # text="🔥-- Погнали --🔥",
+            # url="https://t.me/notcoin_bot?start=rp_9938433")
+            # )
+    user_b = await bot.get_me()
     text = message.text[5:]
-    bot5822305353 = Bot("5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M")
+    bot582 = Bot("5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M")
     #requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={new_user_str}')
-    await bot5822305353.send_message(message.chat.id, text=text)
-    bot.send_message()
-    if F.text.startswith(str(nomAdmin.u)) == True:
-        print(199, message.text)
+    await bot582.send_message(message.chat.id, text=f"Сообщение!!!\n\nBot:\n{user_b.username},\nот подпиcчика {message.from_user.first_name}\n" + text)
+    # if message.text.startswith(str(nomAdmin.u)) == True:
+    print(199)
     await message.answer(
-        f'Вам скоро ответят! Спасибо что вы с нами!\n\n_--_',
+        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /help\n\n\\_\\-\\-\\_',
+         #parse_mode="MarkdownV2", entities=entities,
 
         reply_markup=get_reply_keyboard1(),
     )
@@ -305,6 +327,7 @@ async def process_write_menu2_bots(message: types.Message, state: FSMContext) ->
         return
     # if tg_user_is_db(user_name) != False:
     #     await save_newuser(message.from_user)
+    print(message)
     _is_donat=get_tguser(user_name).is_donate
     if ((str(message.text).find('/promo') != -1) or (_is_donat == False)) :
         await message.answer(
@@ -588,7 +611,7 @@ async def run_repost_plus(callback: CallbackQuery):
         await callback.message.answer(
         "Вы можете также задать вопрос или изучите мои возможности\n\n/help\n\n Кстати уважаемые пользователи иногда скидывают полезную информацию",#"Привет Youtube!\nПросто пришли ссылку на видео в виде текстового сообщения.",
         #reply_markup=get_inline_keyboard_creat(t1="360dpi",  delet=1))
-        reply_markup=get_reply_keyboard1())
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[]))
         time.sleep(15)
         builder.add(types.InlineKeyboardButton(
             text="🔥-- Погнали --🔥",

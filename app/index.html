@@ -225,8 +225,7 @@
       <img class="LogoPic1" src="static/img/Robir-no-back.svg" width="250" height="230" alt="Логотип">
 
         </div>
-<!-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="help_develop_men/317" data-width="100%" data-userpic="false" data-dark="1"></script>
- -->    <button id="main_btn" ><a href="https://t.me/help_develop_men/317">О встроенном в Telegram кошельке @wallet</a></button>
+    <button id="main_btn" ><a href="https://t.me/help_develop_men/317">О встроенном в Telegram кошельке @wallet</a></button>
 <!--             <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a>
             (opens outside webview)
         </li>
@@ -251,9 +250,12 @@
     <div id="btn_status" class="hint" >
     </div> -->
    
-       <button id="btn_vacancy_chanal" onclick=""><a href="https://t.me/vacancies_by"> Описание вакансии подробно</a></button>
+       <button id="btn_vacancy_chanal" onclick=""><a href="javascript:window.open('https://t.me/vacancies_by');">Описание вакансии подробно</a></button>
     <div id="btn_status" class="hint" >
-    </div>
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="vacancies_by" data-width="100%" data-userpic="false" data-dark="1"></script>
+
+<!--         </a><a href="https://t.me/vacancies_by"> Описание вакансии подробно</a>
+ -->    </div>
 </section>
 
 <div class="viewport_border"></div>
@@ -282,6 +284,7 @@
                   <option data-sel="veb-dizajner" label="Web дизайнер" data-url="veb-dizajner" value="Web дизайнер" selected=""></option>
                   <option data-sel="dizajner-v-otdel-marketinga" label="Дизайнером в отделе маркетинга" value="dizajner-v-otdel-marketinga" ></option>
                   <option data-sel="dizajner-v-poligrafiyu" label="Дизайнером в полиграфии" value="Дизайнером в полиграфии" ></option>
+                  <option data-sel="dizayner" label="Дизайнер" value="Дизайнер" ></option>
 
                 </select>
           </div>
@@ -323,6 +326,8 @@
                   <option id="veb-dizajner" label="veb-dizajner" value="https://rabota.by/vacancies/veb-dizajner" selected=""></option>
                   <option id="dizajner-v-otdel-marketinga" label="dizajner-v-otdel-marketinga" value="https://rabota.by/vacancies/dizajner-v-otdel-marketinga"></option>
                   <option id="dizajner-v-poligrafiyu" label="dizajner-v-poligrafiyu" value="https://rabota.by/vacancies/dizajner-v-poligrafiyu"></option>
+                  <option id="dizayner" label="dizayner" value="https://rabota.by/vacancies/dizayner"></option>
+
                 </select>
 <!--             <div class="form__input" name="Оплата">
            <input type="hidden" name="Изделие" value="Количество запршенных вакансий">
