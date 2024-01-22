@@ -170,7 +170,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     # res = requests.get(_url)
 
 
-@form_router.message(Command("help", "INFO))
+@form_router.message(Command("help", "INFO"))
 async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
