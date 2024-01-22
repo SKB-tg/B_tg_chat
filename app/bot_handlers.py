@@ -210,8 +210,8 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     # if message.text.startswith(str(nomAdmin.u)) == True:
     print(199)
     await message.answer(
-        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /help\n\n\\_\\-\\-\\_',
-         #parse_mode="MarkdownV2", entities=entities,
+        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /INFO\n\n\\_\\-\\-\\_',
+         parse_mode="MarkdownV2",# entities=entities,
 
         reply_markup=get_reply_keyboard1(),
     )
