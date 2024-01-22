@@ -32,7 +32,7 @@ from aiogram.methods import GetMyCommands, DeleteMessage
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
-from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
@@ -61,14 +61,7 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-if ngrok:
-    from pyngrok import ngrok
-
-    public_url = ngrok.connect(PORT).public_url
-    # public_url = ngrok_tunnel.start()
-    base_url= public_url # "https://b-tg-chat.onrender.com"
-else:
-    base_url = BASE_URL
+base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
