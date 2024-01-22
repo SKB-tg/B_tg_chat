@@ -138,7 +138,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     {"command": "start", "description": "рестарт"},
     {"command": "INFO", "description": "справочная информация"},
     {"command": "promo", "description": "ввести промо код"},
-    {"command": "get_vakancy", "description": "Запрос новых вакансий"},
+    #{"command": "get_vakancy", "description": "Запрос новых вакансий"},
     {"command": "settings", "description": "настройки бота"},
     {"command": "get_admin", "description": "Написать админу"},
 
