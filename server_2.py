@@ -25,7 +25,7 @@ from async_timeout import timeout
 import requests
 from app.bot_handlers import (bot, form_router, base_url, ext_send_message_handler,
     check_data_handler, get_vakancy_handler, cal_router)
-from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 PORT = os.getenv("PORT")
 
