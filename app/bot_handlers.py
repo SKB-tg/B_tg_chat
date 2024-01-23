@@ -148,7 +148,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
 
-    user_name= message.from_user.username
+    user_name = message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
         _new_user={}
@@ -197,7 +197,7 @@ from aiogram.utils.markdown import hide_link
 @form_router.message(GetAdminFilter())
 async def message_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
-    entities = [MessageEntity(type='bot_command', offset=4, length=4, url='/help@avtoposter_ro_bot')]
+    #entities = [MessageEntity(type='bot_command', offset=4, length=4, url='/help@avtoposter_ro_bot')]
             # builder.add(types.InlineKeyboardButton(
             # text="🔥-- Погнали --🔥",
             # url="https://t.me/notcoin_bot?start=rp_9938433")
@@ -210,7 +210,7 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     # if message.text.startswith(str(nomAdmin.u)) == True:
     print(199)
     await message.answer(
-        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> /info_gid\n\n\\_\\-\\-\\_',
+        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> _/info_gid_\n\n\\_\\-\\-\\_',
          parse_mode="MarkdownV2",# entities=entities,
 
         reply_markup=get_reply_keyboard1(),
