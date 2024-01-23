@@ -123,7 +123,7 @@ async def save_newuser(user):
  
  #*******************************************
 
-#@form_router.message(F.text.casefold() == "чатбот")
+
 @form_router.message(Command("start"))
 async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=base_url) -> None:
     #await state.set_state(Form.name)
@@ -166,11 +166,11 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
          reply_markup=InlineKeyboardMarkup(inline_keyboard=[]),
     )
     #Заранее разбудим ресурс по вакансиям
-    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    # res = requests.get(_url)
+    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    res = requests.get(_url)
 
 
-@form_router.message(Command("help", "INFO"))
+@form_router.message(Command("help", "info_gid"))
 async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
