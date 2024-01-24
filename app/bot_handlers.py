@@ -470,7 +470,7 @@ async def get_vakancy_handler(request: Request):
         res = requests.post(url2, headers=headers1, json=json.loads(data2))
         print(412, res.json)
         res_j = json.dumps(res.json())
-        out_txt = eval(res_j)
+        out_txt = str_for_dict(res_j)
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
