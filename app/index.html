@@ -471,7 +471,8 @@
         });
     }
 
-    function getVacancies() { 
+    function getVacancies() {  const data_setVacancy_last = localStorage.getItem('settingsVacancy');
+        if (! data_setVacancy_last) {alert('Сперва настройте фильтр!'); return;}
         if ($('#vacancy_data_img').css("display") == 'block') { alert('Не жми так часто, дождись ответа!'); return;}
         else {
         const data_setVacancy_last = localStorage.getItem('settingsVacancy');
