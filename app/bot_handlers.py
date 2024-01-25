@@ -36,7 +36,7 @@ from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
-from app.u_utils import str_for_dict, get_cmozi
+from app.u_utils import str_for_dict
 
 builder = InlineKeyboardBuilder()
 
