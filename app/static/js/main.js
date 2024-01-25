@@ -959,7 +959,7 @@ function getVacancyPlusSettings(msg_id, with_webview) {
                 $('#vacancy_data_img').toggle();//css('display', 'none')
                 $('button').prop('disabled', false);
                 $('#btn_status').text('Server error').addClass('err').show();
-                alert('Server error');
+                alert(`${result.error}`);
             },
           //   statusCode: {
           // 200: function () { // выполнить функцию если код ответа HTTP 200
