@@ -197,7 +197,7 @@ from aiogram.utils.markdown import hide_link
 @form_router.message(GetAdminFilter())
 async def message_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
-    #entities = [MessageEntity(type='bot_command', offset=4, length=4, url='/help@avtoposter_ro_bot')]
+    #entities = [MessageEntity(type='bot_command', offset=4, length=8, url='/help@avtoposter_ro_bot')]
             # builder.add(types.InlineKeyboardButton(
             # text="🔥-- Погнали --🔥",
             # url="https://t.me/notcoin_bot?start=rp_9938433")
@@ -211,8 +211,7 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     print(199)
     await message.answer(
         'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> _/info_gid_\n\n\\_\\-\\-\\_',
-         parse_mode="MarkdownV2",# entities=entities,
-
+         parse_mode="MarkdownV2", entities=entities,
         reply_markup=get_reply_keyboard1(),
     )
 
