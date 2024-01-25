@@ -468,16 +468,16 @@ async def get_vakancy_handler(request: Request):
     try:
 
         res = requests.post(url2, headers=headers1, json=json.loads(data2))
-        print(412, res.json)
-        res_j = json.dumps(res.json())
-        out_txt = str_for_dict(res_j)
+        #print(412, res.json)
+        #res_j = json.dumps(res.json())
+        out_txt = str_for_dict(res.text)
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
-    print(375, 177, out_txt, res_j)
+    print(375, 177, out_txt)
     payload2 = {
         'ID вакансии': out_txt['id_vakancy'],
-        'категории': out_txt['kategory'],
+        'Категория': out_txt['kategory'],
         'Наименование vakancy': out_txt['name'],
         'Компания': out_txt['company'],
         'Заработок': out_txt['price'], 
