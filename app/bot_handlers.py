@@ -185,8 +185,8 @@ nomAdmin = MyCallback()
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
-    #nomAdmin.u = nom
-    if state.storage["CH_ID"] == 5146071572:
+    print(state.data)
+    if state.data["CH_ID"] == 5146071572:
         print("кнопка с URL")
         builder.add(types.InlineKeyboardButton(
         text="🔥-- Погнали --🔥",
