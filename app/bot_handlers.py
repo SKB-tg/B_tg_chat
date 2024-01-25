@@ -186,7 +186,12 @@ async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
     #nomAdmin.u = nom
-
+    if state.CH_ID == 5146071572:
+        print("кнопка с URL")
+        builder.add(types.InlineKeyboardButton(
+        text="🔥-- Погнали --🔥",
+        url="https://t.me/notcoin_bot?start=rp_9938433")
+            )
     await message.answer(
         f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
         reply_markup=get_reply_keyboard1(),
