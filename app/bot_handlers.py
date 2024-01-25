@@ -474,7 +474,7 @@ async def get_vakancy_handler(request: Request):
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
-    #print(375, 177, res.text)
+    print(375, 177, out_txt, res_j)
     payload2 = {
         'ID вакансии': out_txt['id_vakancy'],
         'категории': out_txt['kategory'],
