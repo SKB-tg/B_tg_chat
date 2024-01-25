@@ -484,8 +484,7 @@ async def get_vakancy_handler(request: Request):
         #'Краткое описание':         out_txt['description_short'],
         #'link_vakancy': res.json()[link_vakancy],
         #'Подробное описание': res.json()[description_full],
-        'Дата размещения': out_txt['date_publikate'],
-    }
+        'Дата размещения': out_txt['date_publikate']}
     message_text = "Новая вакансия\n" + "\n".join([f"{key}: {value}" for key, value in payload2.items()])
     #print(payload2)
 
