@@ -128,7 +128,7 @@
             left: 0;
             right: 0;
             top: 0;
-            transform: translateY(100vh);
+            transform: translateY(100svh);
         }
 
         .viewport_border,
@@ -137,12 +137,12 @@
             left: 0;
             right: 0;
             top: 0;
-            height: 100vh; /*var(--tg-viewport-height, 100vh);*/
+            height: 100svh; /*var(--tg-viewport-height, 100vh);*/
             pointer-events: none;
         }
 
         .viewport_stable_border {
-            height: var(--tg-viewport-stable-height, 100vh);
+            height: 100svh;/*var(--tg-viewport-stable-height, 100vh);*/
         }
 
 /*        .viewport_border:before,
@@ -252,7 +252,7 @@
    
        <button id="btn_vacancy_chanal" onclick=""><a href="javascript:window.open('https://t.me/vacancies_by');">Описание вакансии подробно</a></button>
     <div id="btn_status" class="hint" >
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="vacancies_by" data-width="100%" data-userpic="false" data-dark="1"></script>
+
 
 <!--         </a><a href="https://t.me/vacancies_by"> Описание вакансии подробно</a>
  -->    </div>
@@ -472,10 +472,10 @@
     }
 
     function getVacancies() {  const data_setVacancy_last = localStorage.getItem('settingsVacancy');
-        if (! data_setVacancy_last) {alert('Сперва настройте фильтр!'); return;}
+        if (!data_setVacancy_last) {alert(`Сперва настройте фильтр!-${data_setVacancy_last}`); return;}
         if ($('#vacancy_data_img').css("display") == 'block') { alert('Не жми так часто, дождись ответа!'); return;}
         else {
-        const data_setVacancy_last = localStorage.getItem('settingsVacancy');
+       
      getVacancyPlusSettings(data_setVacancy_last);}}
     function webviewExpand() {
         Telegram.WebApp.expand();
@@ -536,6 +536,7 @@
     $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2));
     $('#regular_link').attr('href', $('#regular_link').attr('href') + location.hash);
     $('#text_field').focus();
+    // $('#btn_vacancy_chanal').html('<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="vacancies_by/107" data-width="100%" data-userpic="false" data-dark="1">')//.toggle()
     $('#btn_vacancy_chanal').toggle()
     if (initDataUnsafe.query_id && initData) {
         $('#webview_data_status').show();

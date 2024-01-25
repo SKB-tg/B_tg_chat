@@ -32,11 +32,11 @@ from aiogram.methods import GetMyCommands, DeleteMessage
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
 from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.handlers.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
-from app.u_utils import str_for_dict
+from app.u_utils import str_for_dict, get_cmozi
 
 builder = InlineKeyboardBuilder()
 
@@ -61,7 +61,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -123,8 +130,8 @@ async def save_newuser(user):
  
  #*******************************************
 
-
-@form_router.message(Command("start"))
+#@form_router.message(F.text.casefold() == "чатбот")
+@form_router.message(Command(commands=["start"]))
 async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=base_url) -> None:
     #await state.set_state(Form.name)
     await bot.set_chat_menu_button(
@@ -136,9 +143,8 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     _commands1 = [
     {"command": "help", "description": "помощь"},
     {"command": "start", "description": "рестарт"},
-    {"command": "info_gid", "description": "справочная информация"},
     {"command": "promo", "description": "ввести промо код"},
-    #{"command": "get_vakancy", "description": "Запрос новых вакансий"},
+    {"command": "info_gid", "description": "справочная информация"},
     {"command": "settings", "description": "настройки бота"},
     {"command": "get_admin", "description": "Написать админу"},
 
@@ -148,7 +154,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
 
-    user_name = message.from_user.username
+    user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
         _new_user={}
@@ -166,11 +172,11 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
          reply_markup=InlineKeyboardMarkup(inline_keyboard=[]),
     )
     #Заранее разбудим ресурс по вакансиям
-    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    res = requests.get(_url)
+    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    # res = requests.get(_url)
 
 
-@form_router.message(Command("help", "info_gid"))
+@form_router.message(Command(commands=["help", "info_gid"]))
 async def command_help(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     result = await bot(GetMyCommands())
@@ -185,16 +191,22 @@ nomAdmin = MyCallback()
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
-    print(state.data)
-    if state.data["CH_ID"] == 5146071572:
-        print("кнопка с URL")
+    CH_ID = await state.get_data()
+    chat_id_privat = 6034643381
+    if CH_ID["CH_ID"] == 5146071572:
+           
         builder.add(types.InlineKeyboardButton(
-        text="🔥-- Погнали --🔥",
-        url="https://t.me/notcoin_bot?start=rp_9938433")
+        text="Оповещение",
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id="{chat_id_privat}"&text=Краткосрочные технические работы завершены. Бот снова в работе')
             )
-    await message.answer(
+        #reply_markup=builder.as_markup())
+        await message.answer(
         f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
-        reply_markup=get_reply_keyboard1(),
+        reply_markup=builder.as_markup())
+        return
+    await message.answer(
+    f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
+    reply_markup=get_reply_keyboard1()
     )
 
 from aiogram.utils.markdown import hide_link
@@ -202,7 +214,7 @@ from aiogram.utils.markdown import hide_link
 @form_router.message(GetAdminFilter())
 async def message_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
-    #entities = [MessageEntity(type='bot_command', offset=4, length=8, url='/help@avtoposter_ro_bot')]
+    entities = [MessageEntity(type='bot_command', offset=10, length=8, url='/help@avtoposter_ro_bot')]
             # builder.add(types.InlineKeyboardButton(
             # text="🔥-- Погнали --🔥",
             # url="https://t.me/notcoin_bot?start=rp_9938433")
@@ -211,12 +223,12 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     text = message.text[5:]
     bot582 = Bot("5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M")
     #requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={new_user_str}')
-    await bot582.send_message(message.chat.id, text=f"Сообщение!!!\n\nBot:\n{user_b.username},\nот подпиcчика {message.from_user.first_name}\n" + text)
-    # if message.text.startswith(str(nomAdmin.u)) == True:
-    print(199)
+    await bot582.send_message(5146071572, text=f"Сообщение!!!\n\nBot:\n{user_b.username},\nот подпиcчика {message.from_user.first_name}\n" + text)
+
     await message.answer(
-        'Вам скоро ответят\\! Спасибо что вы с нами\\!\n\nСправочный гид \\-\\> _/info_gid_\n\n\\_\\-\\-\\_',
-         parse_mode="MarkdownV2", entities=entities,
+        'Вам скоро ответят! Спасибо что вы с нами!\n\nСправочный гид -> /info_gid\n\n_--_',
+         #parse_mode="MarkdownV2", entities=entities,
+
         reply_markup=get_reply_keyboard1(),
     )
 
@@ -468,17 +480,17 @@ async def get_vakancy_handler(request: Request):
     "bot_token": "6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM"
     }
     data2 = json.dumps(payload1)
-    print(payload1, data2)
+    print(473, payload1, data2)
     try:
 
         res = requests.post(url2, headers=headers1, json=json.loads(data2))
-        #print(412, res.json)
-        #res_j = json.dumps(res.json())
+        print(474, res.text)
+        #res_j = json.loads(res.json())
         out_txt = str_for_dict(res.text)
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
-    print(375, 177, out_txt)
+    print(375, 177, res.text)
     payload2 = {
         'ID вакансии': out_txt['id_vakancy'],
         'Категория': out_txt['kategory'],
@@ -488,7 +500,8 @@ async def get_vakancy_handler(request: Request):
         #'Краткое описание':         out_txt['description_short'],
         #'link_vakancy': res.json()[link_vakancy],
         #'Подробное описание': res.json()[description_full],
-        'Дата размещения': out_txt['date_publikate']}
+        'Дата размещения': out_txt['date_publikate'],
+    }
     message_text = "Новая вакансия\n" + "\n".join([f"{key}: {value}" for key, value in payload2.items()])
     #print(payload2)
 
