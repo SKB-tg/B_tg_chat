@@ -196,11 +196,11 @@ async def command_admin(message: Message, state: FSMContext) -> None:
         await message.answer(
         f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
         reply_markup=builder.as_markup())
-        return
-    await message.answer(
-    f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
-    reply_markup=get_reply_keyboard1()
-    )
+    else:
+        await message.answer(
+        f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
+        reply_markup=get_reply_keyboard1()
+        )
 
 from aiogram.utils.markdown import hide_link
 
