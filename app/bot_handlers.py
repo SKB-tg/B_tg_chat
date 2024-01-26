@@ -37,7 +37,7 @@ from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
 from app.u_utils import str_for_dict
-
+import app.txt
 builder = InlineKeyboardBuilder()
 
 #************************************
@@ -61,7 +61,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -129,7 +136,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     #await state.set_state(Form.name)
     await bot.set_chat_menu_button(
         chat_id=message.chat.id,
-        menu_button=MenuButtonWebApp(text="Разбуди бота", web_app=WebAppInfo(url=f"{base_url}")),
+        menu_button=MenuButtonWebApp(text="Глав. страница", web_app=WebAppInfo(url=f"{base_url}")),
     )
     # _command1: BotCommand = None
     _commands1: list = []
@@ -161,9 +168,11 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         add_tg_user(_new_user)
         await save_newuser(message.from_user)
     await message.answer(
-        'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "разбуди бота" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
-         reply_markup=InlineKeyboardMarkup(inline_keyboard=[]),
+        'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "Глав. страница" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
+         reply_markup=ReplyKeyboardRemove(),
     )
+    await message.answer(txt.txt_vakancy)
+    await message.answer(txt.txt_vakancy2)
     #Заранее разбудим ресурс по вакансиям
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
@@ -184,13 +193,13 @@ nomAdmin = MyCallback()
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
-    CH_ID = await state.get_data()
+    ch = await state.get_data()
     chat_id_privat = 6034643381
-    if CH_ID["CH_ID"] == 5146071572:
+    if ch["CH_ID"] == 5146071572:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе')
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id="{chat_id_privat}"&text=Краткосрочные технические работы завершены. Бот снова в работе')
             )
         #reply_markup=builder.as_markup())
         await message.answer(
