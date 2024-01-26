@@ -184,9 +184,9 @@ nomAdmin = MyCallback()
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
-    CH_ID = await state.get_data()
+    ch = await state.get_data()
     chat_id_privat = 6034643381
-    if CH_ID["CH_ID"] == 5146071572:
+    if ch["CH_ID"] == 5146071572:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
