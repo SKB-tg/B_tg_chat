@@ -61,7 +61,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -184,13 +191,13 @@ nomAdmin = MyCallback()
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
     nomAdmin.u = random.randint(10000, 100000)
-    ch = await state.get_data()
+    CH_ID = await state.get_data()
     chat_id_privat = 6034643381
-    if ch["CH_ID"] == 5146071572:
+    if CH_ID["CH_ID"] == 5146071572:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе')
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id="{chat_id_privat}"&text=Краткосрочные технические работы завершены. Бот снова в работе')
             )
         #reply_markup=builder.as_markup())
         await message.answer(
@@ -474,30 +481,36 @@ async def get_vakancy_handler(request: Request):
     }
     data2 = json.dumps(payload1)
     print(473, payload1, data2)
+    message_text_out = ""
     try:
+        #list_res = []
 
         res = requests.post(url2, headers=headers1, json=json.loads(data2))
         print(474, res.text)
-        #res_j = json.loads(res.json())
-        out_txt = str_for_dict(res.text)
+        res_j = json.loads(res.text)
+        print(490, res_j)
+
+        for out_txt in res_j:
+            print(492, type(out_txt), out_txt)
+
+            #print(375, 177, res.text)
+            payload2 = {
+                'ID вакансии': out_txt['id_vakancy'],
+                'Категория': out_txt['kategory'],
+                'Наименование vakancy': out_txt['name'],
+                'Компания': out_txt['company'],
+                'Заработок': out_txt['price'], 
+                #'Краткое описание':         out_txt['description_short'],
+                #'link_vakancy': res.json()[link_vakancy],
+                #'Подробное описание': res.json()[description_full],
+                'Дата размещения': out_txt['date_publikate'],
+            }
+            message_text = "\n".join([f"{key}: {value}" for key, value in payload2.items()])
+            message_text_out += "\n------------\n\n" + message_text
+        message_text_out1 = "Новые вакансии\n" + message_text_out
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
         return json_response({"ok": False, "data": res.status_code})
-    print(375, 177, res.text)
-    payload2 = {
-        'ID вакансии': out_txt['id_vakancy'],
-        'Категория': out_txt['kategory'],
-        'Наименование vakancy': out_txt['name'],
-        'Компания': out_txt['company'],
-        'Заработок': out_txt['price'], 
-        #'Краткое описание':         out_txt['description_short'],
-        #'link_vakancy': res.json()[link_vakancy],
-        #'Подробное описание': res.json()[description_full],
-        'Дата размещения': out_txt['date_publikate'],
-    }
-    message_text = "Новая вакансия\n" + "\n".join([f"{key}: {value}" for key, value in payload2.items()])
-    #print(payload2)
-
     # await bot.answer_web_app_query(
     #     web_app_query_id=web_app_init_data.query_id,
     #     result=InlineQueryResultArticle(
@@ -510,7 +523,8 @@ async def get_vakancy_handler(request: Request):
     #         reply_markup=None,
     #     ),
     # )
-    return json_response({"ok": True, "data": message_text}) 
+    print(509, message_text_out)
+    return json_response({"ok": True, "data": message_text_out1}) 
 
 async def check_data_handler(request: Request):
     bot: Bot = request.app["bot"]
