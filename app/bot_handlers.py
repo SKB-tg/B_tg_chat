@@ -165,7 +165,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
          reply_markup=ReplyKeyboardRemove(),
     )
     await message.answer(txt.txt_vakancy)
-    await message.answer(txt.txt_vakancy2)
+    await message.answer(txt.txt_vakancy2, InlineKeyboardMarkup(inline_keyboard=[]))
     #Заранее разбудим ресурс по вакансиям
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
