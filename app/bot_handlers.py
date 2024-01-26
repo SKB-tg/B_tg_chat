@@ -190,7 +190,7 @@ async def command_admin(message: Message, state: FSMContext) -> None:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id="{chat_id_privat}"&text=Краткосрочные технические работы завершены. Бот снова в работе')
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе')
             )
         #reply_markup=builder.as_markup())
         await message.answer(
