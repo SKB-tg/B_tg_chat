@@ -223,8 +223,7 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     await bot582.send_message(5146071572, text=f"Сообщение!!!\n\nBot:\n{user_b.username},\nот подпиcчика {message.from_user.first_name}\n" + text)
 
     await message.answer(
-        '<u>Вам скоро ответят! Спасибо что вы с нами!\n\nСправочный гид -> /info_gid/u<>\n\n_--_',
-         #parse_mode="MarkdownV2", entities=entities,
+        **txt.content_adm.as_kwargs(),
 
         reply_markup=get_reply_keyboard1(),
     )
