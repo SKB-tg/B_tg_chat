@@ -23,8 +23,8 @@ from aiogram import Bot, Dispatcher, types, F, Router, html # executor,
 #from aiogram.utils.executor import start_polling, start_webhook
 from aiogram.filters import Command, Filter, StateFilter, BaseFilter
 from aiogram.enums import ParseMode
-from aiogram.utils.formatting import (
-    Bold, as_list, as_marked_section, as_key_value, HashTag)
+#from aiogram.utils.formatting import (
+#    Bold, as_list, as_marked_section, as_key_value, HashTag)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
