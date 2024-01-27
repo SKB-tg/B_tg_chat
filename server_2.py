@@ -56,7 +56,7 @@ async def main_rout(request: Request):
     print(Path(__file__).parent.resolve())
 
 async def on_startup(bot: Bot, base_url: str):
-    await bot.delete_webhook()
+    #await bot.delete_webhook()
     await bot.set_webhook(f"{base_url}/webhook", allowed_updates=["message", "edited_channel_post", "callback_query", "poll_answer"])
 
 #*********************************************
