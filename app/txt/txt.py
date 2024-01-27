@@ -11,9 +11,10 @@ content_adm=as_list(
   ),
   as_marked_section(
       Bold("Справочный гид:"),
-      "/info_gid",
+      " /info_gid",
       marker="✅ ",
   ),
+  #sep="\n\n",
   # as_marked_section(
   #     Bold("Summary:"),
   #     as_key_value("Total", 4),
@@ -21,5 +22,5 @@ content_adm=as_list(
   #     as_key_value("Failed", 1),
   #     marker="✅❌ ",
   # ),
-  # HashTag("#test"),
+  HashTag("#admin"),
   sep="\n\n")
