@@ -496,7 +496,7 @@ async def get_vakancy_handler(request: Request):
                 'Наименование vakancy': out_txt['name'],
                 'Компания': out_txt['company'],
                 'Заработок': out_txt['price'],
-                'message_id': out_txt['message_id'],
+                'message_id': out_txt['owner_id'],
                 #'Краткое описание':         out_txt['description_short'],
                 #'link_vakancy': res.json()[link_vakancy],
                 #'Подробное описание': res.json()[description_full],
