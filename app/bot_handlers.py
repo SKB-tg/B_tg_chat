@@ -22,7 +22,9 @@ from aiohttp.web_request import Request
 from aiogram import Bot, Dispatcher, types, F, Router, html # executor,
 #from aiogram.utils.executor import start_polling, start_webhook
 from aiogram.filters import Command, Filter, StateFilter, BaseFilter
-#from aiogram.filters.state import StateFilter
+from aiogram.enums import ParseMode
+from aiogram.utils.formatting import (
+    Bold, as_list, as_marked_section, as_key_value, HashTag)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
@@ -192,7 +194,7 @@ async def command_admin(message: Message, state: FSMContext) -> None:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id="{chat_id_privat}"&text=Краткосрочные технические работы завершены. Бот снова в работе')
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе')
             )
         #reply_markup=builder.as_markup())
         await message.answer(
@@ -221,7 +223,7 @@ async def message_admin(message: Message, state: FSMContext) -> None:
     await bot582.send_message(5146071572, text=f"Сообщение!!!\n\nBot:\n{user_b.username},\nот подпиcчика {message.from_user.first_name}\n" + text)
 
     await message.answer(
-        'Вам скоро ответят! Спасибо что вы с нами!\n\nСправочный гид -> /info_gid\n\n_--_',
+        '<u>Вам скоро ответят! Спасибо что вы с нами!\n\nСправочный гид -> /info_gid/u<>\n\n_--_',
          #parse_mode="MarkdownV2", entities=entities,
 
         reply_markup=get_reply_keyboard1(),
