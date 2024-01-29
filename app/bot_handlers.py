@@ -23,8 +23,8 @@ from aiogram import Bot, Dispatcher, types, F, Router, html # executor,
 #from aiogram.utils.executor import start_polling, start_webhook
 from aiogram.filters import Command, Filter, StateFilter, BaseFilter
 from aiogram.enums import ParseMode
-#from aiogram.utils.formatting import (
-#    Bold, as_list, as_marked_section, as_key_value, HashTag)
+from aiogram.utils.formatting import (
+    Bold, as_list, as_marked_section, as_key_value, HashTag)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
@@ -224,6 +224,8 @@ async def message_admin(message: Message, state: FSMContext) -> None:
 
     await message.answer(
         **txt.content_adm.as_kwargs(),
+        # '<u>Вам скоро ответят! Спасибо что вы с нами!\n\nСправочный гид -> /info_gid/u<>\n\n_--_',
+        #  parse_mode=ParseMode.HTML, entities=entities,
 
         reply_markup=get_reply_keyboard1(),
     )
@@ -291,7 +293,7 @@ async def command_get_vakancy(message: Message, state: FSMContext) -> None:
     await message.answer_video(video, caption="Видео без рекламы", reply_markup=ReplyKeyboardRemove())
 
 #@form_router.message(F.text.startswith("https://www.youtu"))
-@form_router.message((F.chat.func(lambda chat: chat.type == 'private') & (F.text == "🔥 Бонусные-возможности")) | (F.chat.func(lambda chat: chat.type == 'private') & (F.text.startswith("https://youtu"))))
+@form_router.message((F.chat.func(lambda chat: chat.type == 'private') & (F.text == "🔥 Бонусные-возможности")) | (F.chat.func(lambda chat: chat.type == 'private') & (F.text.startswith("https://youtu") | F.text.startswith("http://youtu"))))
 async def tube_handler(message: types.Message, state: FSMContext) -> None:
     _is_donat=get_tguser(message.from_user.username).is_donate
     is_donat=get_tguser(message.from_user.username).is_donate
@@ -496,7 +498,7 @@ async def get_vakancy_handler(request: Request):
                 'Наименование vakancy': out_txt['name'],
                 'Компания': out_txt['company'],
                 'Заработок': out_txt['price'],
-                'message_id': out_txt['owner_id'],
+                #'message_id': out_txt['message_id'],
                 #'Краткое описание':         out_txt['description_short'],
                 #'link_vakancy': res.json()[link_vakancy],
                 #'Подробное описание': res.json()[description_full],
@@ -507,7 +509,7 @@ async def get_vakancy_handler(request: Request):
         message_text_out1 = "Новые вакансии\n" + message_text_out
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
-        return json_response({"ok": False, "data": res.status_code})
+        return json_response({"ok": False, "data": res.status_code, 'message_id': out_txt['message_id'],})
     # await bot.answer_web_app_query(
     #     web_app_query_id=web_app_init_data.query_id,
     #     result=InlineQueryResultArticle(
