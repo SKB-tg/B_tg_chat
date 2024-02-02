@@ -39,7 +39,7 @@ from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
 from app.u_utils import str_for_dict
-#from app.bot_utils import get_message_id_by_keyword
+from app.bot_utils import get_message_id_by_keyword
 
 from app.txt import txt
 builder = InlineKeyboardBuilder()
@@ -65,7 +65,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -168,8 +175,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "Глав. страница" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
          reply_markup=ReplyKeyboardRemove(),
     )
-    await message.answer(txt.txt_vakancy)
-    await message.answer(txt.txt_vakancy2, reply_markup=InlineKeyboardMarkup(inline_keyboard=[]))
+    await message.answer(txt.txt_vakancy, reply_markup=InlineKeyboardMarkup(inline_keyboard=[]))
     #Заранее разбудим ресурс по вакансиям
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
