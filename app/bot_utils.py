@@ -1,7 +1,7 @@
 from typing import Callable, Dict, Any, Awaitable, Union, List, Optional, BinaryIO, cast
 from aiogram.fsm.storage.base import BaseStorage
 
-from app.TeleBot import service_telethon
+#from app.TeleBot import service_telethon
 
 #MyStorage = BaseStorage()
 
@@ -9,14 +9,14 @@ from app.TeleBot import service_telethon
 
 #mess_id = service_telethon.get_chat_history(-1002040372211)
 
-def get_message_id_by_keyword(chat_id, keyword: str, limit: int):
-    messages = service_telethon.scan_messages(chat_id, limit)
-    for message in messages:
-        print(15, message.text)
-        if keyword in message.text:
-            print(18, message)
-            return message.message_id
-        return 1
+# def get_message_id_by_keyword(chat_id, keyword: str, limit: int):
+#     messages = service_telethon.scan_messages(chat_id, limit)
+#     for message in messages:
+#         print(15, message.text)
+#         if keyword in message.text:
+#             print(18, message)
+#             return message.message_id
+#         return 1
 
 #   Используется в MyMiddleware 
 async def save_fsm_storage_chat_id(data: Dict[str, Any]) -> Dict[str, Any]:
