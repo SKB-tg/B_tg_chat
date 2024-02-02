@@ -35,6 +35,9 @@
        a {
             color: #ffffff;
         }
+        #message_visible {
+            color: #ffff;
+        }
 
         button {
             display: block;
@@ -48,6 +51,10 @@
             color: var(--tg-theme-button-text-color, #ffffff);
             cursor: pointer;
         }
+/*        #btn_vacancy_chanal {
+            padding: 3px 10px;
+        }*/
+
 
         button[disabled] {
             opacity: 0.6;
@@ -130,6 +137,21 @@
             top: 0;
             transform: translateY(100svh);
         }
+        hr {
+          border: none;
+          border-top: 3px double #fff;
+          color: #fff;
+          overflow: visible;
+          text-align: center;
+          height: 5px;
+        }
+
+        hr::after {
+          background: #162740;
+          content: '§';
+          padding: 0 4px;
+          position: relative;
+          top: -13px;}
 
         .viewport_border,
         .viewport_stable_border {
@@ -249,8 +271,11 @@
 <!--     <button onclick="toggleMainButton(this);">убрать кнопку</button>
     <div id="btn_status" class="hint" >
     </div> -->
-   
-       <button id="btn_vacancy_chanal" onclick=""><a href="javascript:window.open('https://t.me/vacancies_by');">Описание вакансии подробно</a></button>
+       <button id="btn_vacancy_chanal" onclick="scriptMessageVisible()">ПОДРОБНЕЕ
+
+<!--         <a href="javascript:window.open('https://t.me/vacancies_by');">Описание вакансии подробно</a>
+ -->    </button>
+        <div id="message_visible"></div>
     <div id="btn_status" class="hint" >
 
 
@@ -582,6 +607,8 @@
             el.innerHTML = 'убрать кнопку';
         }
     }
+
+
 
     function round(val, d) {
         var k = Math.pow(10, d || 0);

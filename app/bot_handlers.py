@@ -29,7 +29,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
  InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, Poll, PollAnswer, BufferedInputFile, FSInputFile, URLInputFile)
-from aiogram.methods import GetMyCommands, DeleteMessage
+from aiogram.methods import GetMyCommands, DeleteMessage, GetChat
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
@@ -39,6 +39,8 @@ from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
 from app.tube_pars import MyUniTuber
 from app.u_utils import str_for_dict
+from app.bot_utils import get_message_id_by_keyword
+
 from app.txt import txt
 builder = InlineKeyboardBuilder()
 
@@ -63,7 +65,14 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -480,6 +489,7 @@ async def get_vakancy_handler(request: Request):
     data2 = json.dumps(payload1)
     print(473, payload1, data2)
     message_text_out = ""
+    list_mess_id = []
     try:
         #list_res = []
 
@@ -487,7 +497,8 @@ async def get_vakancy_handler(request: Request):
         print(474, res.text)
         res_j = json.loads(res.text)
         print(490, res_j)
-
+        if res_j == []:
+            return json_response({"ok": True, "data": "На сегодня обновления отсутствуют ", 'message_id': 1}) 
         for out_txt in res_j:
             print(492, type(out_txt), out_txt)
 
@@ -504,12 +515,13 @@ async def get_vakancy_handler(request: Request):
                 #'Подробное описание': res.json()[description_full],
                 'Дата размещения': out_txt['date_publikate'],
             }
+            list_mess_id.append(out_txt['mess_id'])
             message_text = "\n".join([f"{key}: {value}" for key, value in payload2.items()])
             message_text_out += "\n------------\n\n" + message_text
         message_text_out1 = "Новые вакансии\n" + message_text_out
     except requests.exceptions.HTTPError as HTTPError:
         #print(375, 177, res.text)
-        return json_response({"ok": False, "data": res.status_code, 'message_id': out_txt['message_id'],})
+        return json_response({"ok": False, "data": res.status_code})
     # await bot.answer_web_app_query(
     #     web_app_query_id=web_app_init_data.query_id,
     #     result=InlineQueryResultArticle(
@@ -522,8 +534,12 @@ async def get_vakancy_handler(request: Request):
     #         reply_markup=None,
     #     ),
     # )
-    print(509, message_text_out)
-    return json_response({"ok": True, "data": message_text_out1}) 
+    # keyword=str(out_txt['id_vakancy'])
+    # chat_id=-1002040372211
+    # mess_id = get_message_id_by_keyword(chat_id, keyword, 10) or 1
+    # message_id = 1 #out_txt['mess_id'] if out_txt['mess_id'] != 1 else mess_id
+    print(509, list_mess_id)
+    return json_response({"ok": True, "data": message_text_out1, 'message_id': list_mess_id}) 
 
 async def check_data_handler(request: Request):
     bot: Bot = request.app["bot"]
