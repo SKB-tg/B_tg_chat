@@ -915,6 +915,24 @@ function send_data_db(obj, obj1) {
             })
 }
 
+function scriptMessageVisible() {
+    
+   //$('#message_visible').toggle();
+    function scr_mess(){var mess = localStorage.getItem('mess_id').split(',');
+      var m = '' ; console.log(mess[0] );
+      for (var i = 0; i < mess.length; i++) {
+        console.log(mess[i]);
+        m += `<script async src="https://telegram.org/js/telegram-widget.js?2" data-telegram-post="vacancies_by/${mess[i]}" data-width="100%" data-userpic="false" data-dark="1" ></script><hr>`;
+      }
+
+             return m;}
+    $('#message_visible').html(`
+        <h3>ПОДРОБНЕЕ В КАНАЛЕ</h3>
+        ${scr_mess()}`);
+    //$('#message_visible').toggle();
+    localStorage.removeItem('mess_id')
+}
+
 function getVacancyPlusSettings(msg_id, with_webview) {
     if (!initDataUnsafe.query_id) {
         alert('WebViewQueryId not defined');
@@ -940,8 +958,19 @@ function getVacancyPlusSettings(msg_id, with_webview) {
                   $('#vacancy_data_img').toggle();//css('display', 'none')
 
                 if (result) {
-                   $('#vacancy_data').html(result["data"]);
-                   if ($('#btn_vacancy_chanal')) {    $('#btn_vacancy_chanal').toggle()}
+                const cartDOMElement = document.createElement('p');
+
+                //for (var i = 0; i < result["data"].length; i++) {
+                $('#vacancy_data').html(result["data"]);
+              localStorage.setItem('mess_id', result['message_id']);
+
+                   
+            if ($('#btn_vacancy_chanal')) {
+              //   $('#btn_vacancy_chanal').html(`
+              // `);
+                $('#btn_vacancy_chanal').toggle();}
+            localStorage.removeItem('settingsVacancy');
+
                 //     if (result.response.ok) {
                 //         if (!el) {webviewClose() }
                 //         $('#btn_status').html('Message sent successfully!').addClass('ok').show();
@@ -955,11 +984,11 @@ function getVacancyPlusSettings(msg_id, with_webview) {
                     //alert('Unknown error');
                 }
             },
-            error: function (xhr) {
+            error: function (xhr, result) {
                 $('#vacancy_data_img').toggle();//css('display', 'none')
                 $('button').prop('disabled', false);
                 $('#btn_status').text('Server error').addClass('err').show();
-                alert(`${result.error}`);
+                alert(result);
             },
           //   statusCode: {
           // 200: function () { // выполнить функцию если код ответа HTTP 200
@@ -967,3 +996,4 @@ function getVacancyPlusSettings(msg_id, with_webview) {
           // }}
     });
 }
+
