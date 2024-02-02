@@ -65,14 +65,7 @@ promo="promo" + '-' + promokod
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
 
-if ngrok:
-    from pyngrok import ngrok
-
-    public_url = ngrok.connect(PORT).public_url
-    # public_url = ngrok_tunnel.start()
-    base_url= public_url # "https://b-tg-chat.onrender.com"
-else:
-    base_url = BASE_URL
+base_url = BASE_URL
 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
@@ -391,7 +384,8 @@ async def process_talk_bots(message: types.Message, state: FSMContext) -> None:
         #stop=["\n"] 
     #)
     print(255)
-    answer="response" #'Ответ HelperGPT:\n' + response['choices'][0]['text']
+    respon = f"Эй, друг как тебя, повтори ка будь добр вопрос, а то я пока курил на балконе, с темы походу соскочил ..."
+    answer=respon #'Ответ HelperGPT:\n' + response['choices'][0]['text']
 
     await message.answer(
         answer,
