@@ -64,14 +64,7 @@ is_donat = False
 promokod = '1003'
 promo="promo" + '-' + promokod
 
-if ngrok:
-    from pyngrok import ngrok
-    TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_HOME")
-    public_url = ngrok.connect(PORT).public_url
-    # public_url = ngrok_tunnel.start()
-    base_url= public_url # "https://b-tg-chat.onrender.com"
-else:
-    base_url = BASE_URL
+base_url = BASE_URL
 
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN) 
