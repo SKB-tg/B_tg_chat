@@ -120,7 +120,7 @@ def main():
 
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=PORT)
+    run_app(app, host="0.0.0.0", port=80)
 
 if __name__ == '__main__':
     main()
