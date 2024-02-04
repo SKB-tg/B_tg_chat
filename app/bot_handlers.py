@@ -27,13 +27,15 @@ from aiogram.utils.formatting import (
     Bold, as_list, as_marked_section, as_key_value, HashTag)
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.storage.memory import MemoryStorage
+
 from aiogram.types import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, MessageEntity,
  InlineKeyboardButton, Message, MenuButtonWebApp, WebAppInfo, Update, Poll, PollAnswer, BufferedInputFile, FSInputFile, URLInputFile)
 from aiogram.methods import GetMyCommands, DeleteMessage, GetChat
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder, KeyboardBuilder
 from aiogram.handlers import CallbackQueryHandler
-from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, tguser, TgUser
+from app.models import add_tg_user, tg_user_is_db, get_tguser, update_coloms_user, load_users, TgUser
 from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
 
 from app.keyboard_button import get_inline_keyboard_creat, get_reply_keyboard2, get_reply_keyboard0, get_reply_keyboard4, get_reply_keyboard1, MyCallback, cb360, cb720, audio
@@ -62,11 +64,10 @@ is_donat = False
 promokod = '1003'
 promo="promo" + '-' + promokod
 
-# Устанавливаем соединение с Telegram API 
-bot = Bot(TELEGRAM_BOT_TOKEN)#'6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM') 
-
 base_url = BASE_URL
 
+# Устанавливаем соединение с Telegram API 
+bot = Bot(TELEGRAM_BOT_TOKEN) 
 # Устанавливаем соединение с OpenAI API 
 # openai.api_key = "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"
 cal_router = Router()
@@ -150,6 +151,7 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     #Заранее разбудим ресурс по вакансиям
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
+    await state.storage.set_data('TgUser', {'donate': False})
 
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
@@ -164,6 +166,10 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
 
         add_tg_user(_new_user)
         await save_newuser(message.from_user)
+
+    if get_tguser(user_name).is_donate:
+        await state.storage.set_data('TgUser', {'donate': True})
+
     await message.answer(
         'Hello friend! Ты попал в приватный чат для общения и консультаций !\n\n---- BETTA-Version ----\n\nЯ использую разные языковые модели на основе ИИ.\nВыполняю функции администратора каналов, групповых чатов....\n Возможности постоянно обновляются.\nЕсли у вас нет промокода,\n а ведь я фанат экосистемы TON,\nты можешь пополнить мою коллекцию на 1TON.\n(для этого нажми на кн. "Глав. страница" - появятся пояснения)\n\nВведите и отправте /promo и 4-ре символа промокода(наприм.- /promo-555m)\n\n/help справочная информацияnn\n\n_--_',
          reply_markup=ReplyKeyboardRemove(),
@@ -188,6 +194,7 @@ nomAdmin = MyCallback()
 @form_router.message(Command(commands=["get_admin"]))
 async def command_admin(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
+    nomAdmin.foo="bd"
     nomAdmin.u = random.randint(10000, 100000)
     ch = await state.get_data()
     chat_id_privat = 6034643381
@@ -195,8 +202,12 @@ async def command_admin(message: Message, state: FSMContext) -> None:
            
         builder.add(types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе')
-            )
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе'),
+        types.InlineKeyboardButton(
+            text="Список из БД",
+            callback_data=nomAdmin.pack(),
+        ))
+        print(nomAdmin.foo)
         #reply_markup=builder.as_markup())
         await message.answer(
         f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
@@ -244,6 +255,8 @@ async def command_promo(message: Message, state: FSMContext) -> None:
     id_db=get_tguser(user_name).id
     is_donate = True
     update_coloms_user(id_db, [{"is_donate": True},])
+    await state.storage.set_data('TgUser', {'donate': True})
+
     await message.answer(
         "Добро пожаловать, у вас полный доступ к действующему функционалу\nЗадавайте вопросы, делитесь мнениями...\n\nДалее обращай внимание на кнопки 😁",
 
@@ -276,12 +289,7 @@ async def command_get_vakancy(message: Message, state: FSMContext) -> None:
 
     print(217, cb360.foo, cb360.url, MyCallback.url)
     return
-    # for res2 in dict(res.json())['detail']:
 
-    #     print(208, res2['input'])
-    #     payload2 = {"ParserData": res2['input']}
-    #     res3 = requests.post(url2, headers=headers1, data=payload2)
-    # for r in dict(res3.json())['detail']:
 #*************************************
     url = 'https://www.youtube.com/watch?v=UM9OK9vFfRM'
     # работать можно с различными списками
@@ -292,6 +300,7 @@ async def command_get_vakancy(message: Message, state: FSMContext) -> None:
     print(208, htm[0], htm[1])
     video = types.FSInputFile(htm[0]+"\\"+htm[1], htm[1])
     await message.answer_video(video, caption="Видео без рекламы", reply_markup=ReplyKeyboardRemove())
+#*********************************************
 
 #@form_router.message(F.text.startswith("https://www.youtu"))
 @form_router.message((F.chat.func(lambda chat: chat.type == 'private') & (F.text == "🔥 Бонусные-возможности")) | (F.chat.func(lambda chat: chat.type == 'private') & (F.text.startswith("https://youtu") | F.text.startswith("http://youtu"))))
@@ -477,7 +486,7 @@ async def get_vakancy_handler(request: Request):
     "fd": int(kot['days_ago']),
     "max_count_vacancy": int(kot['quantity_get_vacancy']),#1,
     "chat_id": int(kot['ID_chat']),#5146071572,
-    "bot_token": "6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM"
+    "bot_token": TELEGRAM_BOT_TOKEN
     }
     data2 = json.dumps(payload1)
     print(473, payload1, data2)
@@ -534,12 +543,22 @@ async def get_vakancy_handler(request: Request):
     print(509, list_mess_id)
     return json_response({"ok": True, "data": message_text_out1, 'message_id': list_mess_id}) 
 
-async def check_data_handler(request: Request):
+async def check_data_handler(request: Request):#, state: FSMContext):
     bot: Bot = request.app["bot"]
-
+    stor: MemoryStorage = request.app["storage"]
     data = await request.post()
+    #print(550, stor.)
+
+    tg_user = parse_webapp_init_data(init_data=data["_auth"]).user
+
+    ch = await stor.get_data('TgUser')
+    print(554, ch)
+    # if ch["donate"]:
+    #     print(555, tg_user)
+    #     if check_webapp_signature(bot.token, data["_auth"]):
+    #         return json_response({"ok": True, "donate": ch['donate']})
     if check_webapp_signature(bot.token, data["_auth"]):
-        return json_response({"ok": True})
+        return json_response({"ok": True, "donate": ch['donate']})
     return json_response({"ok": False, "err": "Unauthorized"}, status=401)
 #**************************END
 
@@ -550,7 +569,7 @@ async def check_box_video_handler(request: Request):
         return json_response({"ok": False, "err": "Unauthorized"}, status=401)
 
     kod = json.loads(data["msg_id"]) #parse_webapp_init_data(init_data=data["_auth"],  loads=[data["msg_id"]])
-    print(data['msg_id'])
+    print(560, data['msg_id'])
 
 
     return json_response({"ok": True})
@@ -591,13 +610,32 @@ async def send_value2(callback: CallbackQuery):
 
 @cal_router.callback_query(F.data.startswith("video:")) #Text(startswith="video_"))
 async def run_repost_plus(callback: CallbackQuery):
-    bot_token = '6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM'
+    bot_token = TELEGRAM_BOT_TOKEN
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id
     sufix_full=callback.data.split(":") or ['', '', '']
     print(501, sufix_full[1])
     print(485, cb360.url, cb360.u)
-    if sufix_full[1] != "continue":
+
+    if (sufix_full[1] == "bd"):
+        message_text_out=""
+        list_tguser_username = load_users()
+        for item in list_tguser_username:
+            message_text = "\n".join([f"{key}: {value}" for key, value in item.items()])
+            message_text_out += "\n------------\n\n" + message_text
+
+        await callback.answer(text=f"_--_\n\nСпасибо, что воспользовались ботом! ")
+
+        await callback.message.answer(
+            f"""Users:\n\n{message_text_out}. 
+                """,
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[]) )
+        await bot.delete_message(chat_id, message_id-2 )
+        await bot.delete_message(chat_id, message_id-1 )
+        await bot.delete_message(chat_id, message_id )
+    #сделать удаление 3-х предыдущих
+        return
+    elif sufix_full[1] != "continue":
         if sufix_full[1] == "Audio":
             url = audio.url
             dpi = 0

@@ -256,7 +256,7 @@
     <button id="with_webview_btn" onclick="">
         Для пополнения моей коллекции 1TON-м используй мой TON-адрес A:8687bh78h7780h0h0hh0
     </button>
-    <button onclick="sendMessage('1003', el=this)">Вход по free-promo-1003</button>
+    <button id="promo_btn" onclick="sendMessage('1003', el=this)">Вход по free-promo-1003</button>
 
     <div class="grupp" style="display: flex;width: 100%; padding: 15px 0; ">
     <button class="int-button-l vacs-btn" onclick="getVacancies();">Получить новые вакансии</button>
@@ -397,7 +397,7 @@
           </div>
  
           <div class="cart-item__content">
-            <h3 class="cart-item__title">Количество сканируемых страниц</h3>
+            <h3 class="cart-item__title">Количество сканируемых страниц <span> (рекомендуется не менять!!!)</span></h3>
 <!--             <input type="hidden" name="Изделие" value="number_of_pages">
  -->            <input class="js-cart-input-quantity" type="hidden" name="Количество" value="1">
           </div>
@@ -481,7 +481,8 @@
                 if (result.response) {
                     if (result.response.ok) {
                         if (!el) {webviewClose() }
-                        $('#btn_status').html('Message sent successfully!').addClass('ok').show();
+                        //$('#btn_status').html('Message sent successfully!').addClass('ok').show();
+                        webviewClose();
                     } else {
                         $('#btn_status').text(result.response.description).addClass('err').show();
                         //alert(result.response.description);
@@ -570,13 +571,16 @@
         $('#webview_data_status').show();
         $.ajax('/checkData', {
             type: 'POST',
-            data: {_auth: initData},
+            data: {
+                _auth: initData},
             dataType: 'json',
             success: function (result) {
-                if (result.ok) {
-                    $('#webview_data_status').html('Hash is correct').addClass('ok');
+                if (result.ok & result.donate) {
+                $('#with_webview_btn').toggle(); $('#promo_btn').toggle();
+                    // $('#webview_data_status').html('Hash is correct').addClass('ok');
                 } else {
-                    $('#webview_data_status').html(result.error).addClass('err');
+                 $('#webview_data_status').html(result.error).addClass('err');
+
                 }
             },
             error: function (xhr) {
