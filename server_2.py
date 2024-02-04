@@ -25,7 +25,7 @@ from async_timeout import timeout
 import requests
 from app.bot_handlers import (bot, form_router, base_url, ext_send_message_handler,
     check_data_handler, get_vakancy_handler, cal_router)
-from app.poll_handler import handle_correct_answer, p_router, QuizAnswer
+from app.poll_handler import p_router
 
 PORT = os.getenv("PORT")
 
@@ -56,12 +56,13 @@ async def main_rout(request: Request):
     print(Path(__file__).parent.resolve())
 
 async def on_startup(bot: Bot, base_url: str):
-    #await bot.delete_webhook()
+    await bot.delete_webhook()
     await bot.set_webhook(f"{base_url}/webhook", allowed_updates=["message", "edited_channel_post", "callback_query", "poll_answer"])
 
 #*********************************************
 from app.bot_utils import save_fsm_storage_chat_id
 from aiogram import BaseMiddleware
+
 class SomeMiddleware(BaseMiddleware):
     async def __call__(
         self,
@@ -69,6 +70,11 @@ class SomeMiddleware(BaseMiddleware):
         event: Update,
         data: Dict[str, Any]
     ) -> Any:
+        # chat = data.get("event_chat")
+        # if (chat.type == "supergroup") | (chat.username == "vacancies_by"):
+        #     vacancies_mess_id = event.message.message_id
+        #     MemoryStorage.set_data( "v_data", {"vacancies_mess_id": vacancies_mess_id})
+
         data = await save_fsm_storage_chat_id(data)
     #*******#Запись "CH_ID" текущего канала в виде dict в хранилище ( data или state) для 
     # дальнейшего использ-я вызывается CH_ID = await state.get_data()["CH_ID"] при сполз. state: FSMContext
@@ -92,6 +98,7 @@ def main():
     app = Application()
     dp["base_url"] = base_url
     app["bot"] = bot
+    app["storage"] = dp.storage
     dp.startup.register(on_startup)
 
     #https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/Webhookinfo
@@ -101,18 +108,19 @@ def main():
     # Create an instance of request handler,
     # aiogram has few implementations for different cases of usage
     # In this example we use SimpleRequestHandler which is designed to handle simple cases
+    #kwargs = {"storage": dp.storage}
     SimpleRequestHandler(
-        dispatcher=dp, bot=bot,
+        dispatcher=dp, bot=bot#, data=kwargs
     ).register(app, path="/webhook")
     app.router.add_get("/", main_rout)
     app.router.add_post("/get_vakancy", get_vakancy_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/ext_message", ext_send_message_handler) # в более сложном варианте запихнуть в ф router.py
     app.router.add_post("/checkData", check_data_handler)
-    app.router.add_static("/static", Path("./app/static"))
+    app.router.add_static("/static", Path("./static"))
 
     setup_application(app, dp, bot=bot)
 
-    run_app(app, host="0.0.0.0", port=80)
+    run_app(app, host="0.0.0.0", port=PORT)
 
 if __name__ == '__main__':
     main()
