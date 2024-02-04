@@ -64,7 +64,14 @@ is_donat = False
 promokod = '1003'
 promo="promo" + '-' + promokod
 
-base_url = BASE_URL
+if ngrok:
+    from pyngrok import ngrok
+    TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_HOME")
+    public_url = ngrok.connect(PORT).public_url
+    # public_url = ngrok_tunnel.start()
+    base_url= public_url # "https://b-tg-chat.onrender.com"
+else:
+    base_url = BASE_URL
 
 # Устанавливаем соединение с Telegram API 
 bot = Bot(TELEGRAM_BOT_TOKEN) 
@@ -179,16 +186,22 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
     # res = requests.get(_url)
 
-
-@form_router.message(Command(commands=["help", "info_gid"]))
-async def command_help(message: Message, state: FSMContext) -> None:
+@form_router.message(Command(commands=["info_gid"]))
+async def command_help_info(message: Message, state: FSMContext) -> None:
     #await state.set_state(Form.name)
-    result = await bot(GetMyCommands())
-    await message.answer(
-        f'Вы можете использовать бота для общения, консультаций, администрирования каналов, групповых чатов(c использованием языковых моделей на основе ИИ).\n\nОсновные команды:\n /promo-****(* - символ) - Войти по промокоду\n\n/start - перезапуск.\n\n/get_admin - Написать админу\n\n/help - команды - пояснения,\n\n_--_',
 
+    await message.answer(
+        **txt.txt_info_gid.as_kwargs(),
         reply_markup=get_reply_keyboard1(),
     )
+
+@form_router.message(Command("help"))
+async def command_help(message: Message, state: FSMContext) -> None:
+    #await state.set_state(Form.name)
+    #result = await bot(GetMyCommands())
+    await message.answer(**txt.txt_help.as_kwargs(),
+        reply_markup=get_reply_keyboard1())
+
 nomAdmin = MyCallback()
 
 @form_router.message(Command(commands=["get_admin"]))
