@@ -148,11 +148,8 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
 
     ]
     await bot.set_my_commands(_commands1)
-    #Заранее разбудим ресурс по вакансиям
-    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    # res = requests.get(_url)
-    await state.storage.set_data('TgUser', {'donate': False})
 
+    await state.storage.set_data('TgUser', {'donate': False})
     user_name= message.from_user.username
     if tg_user_is_db(user_name) == False:
         print(82)
@@ -163,6 +160,9 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
         _new_user['first_name']=message.from_user.first_name
         _new_user['is_bot']=message.from_user.is_bot
         _new_user['is_donate']=False
+
+        # list_tguser_username = load_users()
+        # requests.get(f'https://api.telegram.org/bot5822305353:AAHexHNC9TLD1HZvZGcMg4C19hGnVGLyr6M/sendmessage?chat_id=5146071572&text={new_user_str}')
 
         add_tg_user(_new_user)
         await save_newuser(message.from_user)
@@ -176,8 +176,10 @@ async def command_start(message: Message, state: FSMContext, bot: Bot, base_url=
     )
     await message.answer(txt.txt_vakancy, reply_markup=InlineKeyboardMarkup(inline_keyboard=[]))
     #Заранее разбудим ресурс по вакансиям
-    # _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
-    # res = requests.get(_url)
+    _url = "https://fastapi-pgstarterkit-test.onrender.com/status"
+    res = requests.get(_url)
+    print(res)
+
 
 @form_router.message(Command(commands=["info_gid"]))
 async def command_help_info(message: Message, state: FSMContext) -> None:
@@ -206,14 +208,14 @@ async def command_admin(message: Message, state: FSMContext) -> None:
     chat_id_privat = 6034643381
     if ch["CH_ID"] == 5146071572:
            
-        builder.add(types.InlineKeyboardButton(
+        builder.add(
+        types.InlineKeyboardButton(
         text="Оповещение",
-        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text=Краткосрочные технические работы завершены. Бот снова в работе'),
+        url=f'https://api.telegram.org/bot6334654557:AAE9uBbMvWfTAP6N4L57VIdX38ZLFPQZ9FM/sendmessage?chat_id=6034643381&text={txt.txt_answer_support}'),
         types.InlineKeyboardButton(
             text="Список из БД",
             callback_data=nomAdmin.pack(),
         ))
-        print(nomAdmin.foo)
         #reply_markup=builder.as_markup())
         await message.answer(
         f'Вы хотели Админу написать?\nПрямо сейчас вставте в начало вашего сообщения\nзтот номер "{nomAdmin.u}" и нажмите отправить!\n\n_--_',
