@@ -843,10 +843,10 @@ function selectURL(el) {
 
   }
 
-
-function webviewExpand() {
-    Telegram.WebApp.expand();
-}
+//На весь экран!!!!
+// function webviewExpand() {
+//     Telegram.WebApp.expand();
+// }
 
 // function sendMessagePlusData(data) {
 //     Telegram.WebApp.sendData(data);
@@ -915,6 +915,14 @@ function send_data_db(obj, obj1) {
             })
 }
 
+function btnClear() {
+  if ($('#btn_clear')) { $('#btn_clear').toggle();}
+  $('#vacancy_data').html('Свежие вакансии:      .....');
+  $('#btn_vacancy_chanal').toggle();
+  // $('#btn_vacancy_chanal').toggle();
+  $('#message_visible').html('')
+}
+
 function scriptMessageVisible() {
     
    //$('#message_visible').toggle();
@@ -930,8 +938,9 @@ function scriptMessageVisible() {
         <h3>ПОДРОБНЕЕ В КАНАЛЕ</h3>
         ${scr_mess()}`);
     //$('#message_visible').toggle();
-    localStorage.removeItem('mess_id')
-}
+    localStorage.removeItem('mess_id');
+    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
+  }
 
 function getVacancyPlusSettings(msg_id, with_webview) {
     if (!initDataUnsafe.query_id) {
